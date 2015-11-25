@@ -20,20 +20,9 @@ class Node{
   }
 
   private function report($STATUS) {
-    switch ($STATUS) {
-      case UNDEFINE:
-        return "Node.js is not yet installed.";
-      case ERROR:
-        return "ERROR.";
-      case START:
-        return "Node.js is running.";
-      case RUNNING:
-        return "Node.js is already running.";
-      case NORUNNING:
-        return "Node.js is not yet running.";
-      case STOP:
-        return "Stopping Node.js.";
-    }
+    if ($STATUS === START || $STATUS === RUNNING) $data = array("running" => true, "status" => $STATUS);
+    else $data = array("running" => false, "status" => $STATUS);
+    return $_GET['callback']."([".json_encode($data)."])";
   }
 
   public function start($PASS) {

@@ -1,4 +1,5 @@
 <?php
+	header('Content-Type: application/json; charset=utf8');
 	require_once("node.php");
 
   define("NODE_DIR", "/home/formatcom/node");
