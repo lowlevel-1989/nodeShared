@@ -9,12 +9,13 @@ define("STOP", 5);
 
 class Node{
 
-  private $NODE_DIR, $NODE_PORT, $NODE_PID_DIR, $ADMIN_PASS;
+  private $NODE_DIR, $NODE_PORT, $NODE_PID_DIR, $NODE_APP, $ADMIN_PASS;
 
-  public function Node($NODE_DIR, $NODE_PORT, $NODE_PID_DIR, $ADMIN_PASS) {
+  public function Node($NODE_DIR, $NODE_PORT, $NODE_PID_DIR, $NODE_APP, $ADMIN_PASS) {
     $this->NODE_DIR     = $NODE_DIR; //Carpeta de Nodejs.
     $this->NODE_PORT    = $NODE_PORT; //Puerto del servidor Nodejs.
     $this->NODE_PID_DIR = $NODE_PID_DIR; //Carpeta donde se almacena direccion del proceso.
+    $this->NODE_APP     = $NODE_APP; //Aplicacion Nodejs.
     $this->ADMIN_PASS   = $ADMIN_PASS; //Password para las peticiones.
   }
 
@@ -35,7 +36,7 @@ class Node{
     }
   }
 
-  public function start($FILE, $PASS) {
+  public function start($PASS) {
 
     if($PASS !== $this->ADMIN_PASS) return $this->report(ERROR);
 
@@ -45,9 +46,9 @@ class Node{
 
   	if($node_pid > 0) return $this->report(RUNNING);
 
-    if(!file_exists($FILE)) return $this->report(ERROR);
+    if(!file_exists($this->NODE_APP)) return $this->report(ERROR);
 
-  	$file = escapeshellarg($FILE);
+  	$file = escapeshellarg($this->NODE_APP);
 
   	$node_pid = exec("PORT=$this->NODE_PORT $this->NODE_DIR/bin/node $file > /dev/null & echo $!");
 
