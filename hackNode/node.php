@@ -99,6 +99,12 @@ class Node{
     }
   }
 
+  public function getStatus(){
+    $node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid"));
+    if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
+    else return $this->report(self::$NORUNNING);
+  }
+
 }
 
 ?>
