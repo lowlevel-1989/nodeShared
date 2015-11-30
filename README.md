@@ -29,14 +29,12 @@ Node Shared
   nodeShared esta completamente pensado para trabajar como un API y soporta tanto
   metodo GET como POST y responde siempre con un JSONP.
 
-  * Encender el servidor
-    http://tudominio.com/hackNode/?exec=start&pass=12345Admin
-  * Apagar el servidor
-    http://tudominio.com/hackNode/?exec=stop&pass=12345Admin
+  * Encender el servidor [Start][start]
+  * Apagar el servidor [Stop][stop]
 
 ## Donde corre la app?
 
-  * http://tudominio.com/node/
+  * [App][app]
 
 ## Cual es el fin de nodeShared?
 
