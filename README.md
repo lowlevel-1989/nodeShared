@@ -1,10 +1,12 @@
-Que es nodeShared?
+# Node Shared
+
+## Que es nodeShared?
 
   Es un simulador de daemon nodejs de codigo abierto, que corre en un hosting compartido creado en PHP,
   con el fin de que sea posible usar javascript en el lado del servidor con apache. De esta manera,
   poderse realizar pruebas con esta nueva tecnologia.
 
-Como se configura el servidor?
+## Como se configura el servidor?
 
   1.- Se requiere subir node al servidor via SSH o FTP, el cual se puede descargar desde
   el siguiente enlace: https://nodejs.org/dist/ .
@@ -21,7 +23,7 @@ Como se configura el servidor?
   4.- Subir el proyecto nodeShared a la carpeta publica del servidor. Ya con esto tenemos el servidor
   listo para utilizar con nodejs.
 
-Como se utiliza nodeShared?
+## Como se utiliza nodeShared?
 
   nodeShared esta completamente pensado para trabajar como un API y soporta tanto
   metodo GET como POST y responde siempre con un JSONP.
@@ -31,11 +33,11 @@ Como se utiliza nodeShared?
   - Apagar el servidor
     http://tudominio.com/hackNode/?exec=stop&pass=12345Admin
 
-Donde corre la app?
+## Donde corre la app?
 
   - http://tudominio.com/node/
 
-Cual es el fin de nodeShared?
+## Cual es el fin de nodeShared?
 
   La idea de nodeShared es simular un daemon para nodejs sin ser root,
   al igual que poder utilizar todos los puertos de un hosting compartido.
