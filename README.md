@@ -36,9 +36,6 @@ Node Shared
 
   * [App][app]
 
-<blockquote>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-</blockquote>
 ## Cual es el fin de nodeShared?
 
   La idea de nodeShared es simular un daemon para nodejs sin ser root,
@@ -46,12 +43,13 @@ Node Shared
 
   Todos los log se encuentran en la carpeta node/supervisor/.
 
-  Para que nodeShared puede simular un daemon, es necesario que tu cliente
+  <p>Para que nodeShared puede simular un daemon, es necesario que tu cliente
   lo primero que haga sea atacar a http://tudominio.com/hackNode/?exec=start&pass=12345Admin
   mediante AJAX y esperar como respuesta el JSONP, el cual respondera si el servidor esta encendido.
   Si acaba de ser encendido, o si el proceso habia sido finalizado, dependiendo de la respuesta,
   el te generara un reporte en los archivos log, y automaticamente sabra si levantar el servidor
-  o no. De esta manera, la aplicacion nunca se caera.
+  o no. De esta manera, la aplicacion nunca se caera.</p>
+  
   Gracia a los logs, se podran ver todos los estados por los que ha pasado el servidor.
 
   [Node]: https://nodejs.org/dist/
