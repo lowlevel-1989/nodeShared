@@ -5,20 +5,20 @@
   if (isset($_REQUEST["exec"]) && isset($_REQUEST["daemon"]) && isset($_REQUEST["pass"])){
 
     $exec   = strtolower($_REQUEST["exec"]);
-    $daemon = $_REQUEST["daemon"];
+    $name   = $_REQUEST["daemon"];
     $pass   = $_REQUEST["pass"];
 
-		if(!isset($DAEMONS[$daemon])) die("{}");
+		if(!isset($DAEMONS[$name])) die("{}");
 
     switch ($exec) {
       case "start":
-        echo $DAEMONS[$daemon]->start($pass);
+        echo $DAEMONS[$name]->start($pass);
         break;
       case "status":
-        echo $DAEMONS[$daemon]->getStatus($pass);
+        echo $DAEMONS[$name]->getStatus($pass);
         break;
       case "stop":
-        echo $DAEMONS[$daemon]->stop($pass);
+        echo $DAEMONS[$name]->stop($pass);
         break;
     }
   }
