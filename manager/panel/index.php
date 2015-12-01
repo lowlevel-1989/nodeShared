@@ -4,7 +4,7 @@
     $pass = $_POST[pass];
     if ($pass === ADMIN_PASS){
       $response = $DAEMONS["admin"]->start(ADMIN_PASS);
-      //analiza la respuesta si esta corriendo redicciona a la add admin nodejs.
+      //analiza la respuesta si esta corriendo redicciona a la app admin nodejs.
     }
   }
 ?>
