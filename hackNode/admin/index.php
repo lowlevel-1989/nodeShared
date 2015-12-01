@@ -1,5 +1,5 @@
 <?php
-  require_once("config.php");
+  require_once("../config.php");
   if(isset($_POST[pass])){
     $pass = $_POST[pass];
     if ($pass === ADMIN_PASS){
