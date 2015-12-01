@@ -20,9 +20,9 @@ class Node{
   }
 
   private function writeFile($FILE, $STRING) {
-    $now    = date("d-m-Y H:i:s -> ");
+    $now    = date("d-m-Y H:i:s|");
     $buffer = @fopen("$this->NODE_DIR/supervisor/$FILE", "a+");
-    @fwrite($buffer, $this->DAEMON.";".$now.$STRING."\r");
+    @fwrite($buffer, $this->DAEMON."|".$now.$STRING."\r");
     @fclose($buffer);
   }
 
