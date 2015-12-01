@@ -14,6 +14,9 @@
       case "start":
         echo $DAEMONS[$daemon]->start($pass);
         break;
+      case "status":
+        echo $DAEMONS[$daemon]->getStatus($pass);
+        break;
       case "stop":
         echo $DAEMONS[$daemon]->stop($pass);
         break;

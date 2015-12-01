@@ -100,7 +100,11 @@ class Node{
     }
   }
 
-  public function getStatus(){
+  public function getStatus($PASS){
+    if($PASS !== $this->ADMIN_PASS){
+      $this->writeFile("error.log", "ERROR PASSWORD.");
+      return $this->report(self::$ERROR);
+    }
     $node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON"));
     if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
     else return $this->report(self::$NORUNNING);
