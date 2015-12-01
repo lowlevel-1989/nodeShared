@@ -10,9 +10,10 @@ class Node{
   private static $NORUNNING = 4;
   private static $STOP      = 5;
 
-  private $NODE_DIR, $NODE_APP, $ADMIN_PASS;
+  private $DAEMON, $NODE_DIR, $NODE_APP, $ADMIN_PASS;
 
-  public function Node($NODE_DIR, $NODE_APP, $ADMIN_PASS) {
+  public function Node($DAEMON, $NODE_DIR, $NODE_APP, $ADMIN_PASS) {
+    $this->DAEMON       = strtolower($DAEMON); //Nombre del daemon.
     $this->NODE_DIR     = $NODE_DIR; //Carpeta de Nodejs.
     $this->NODE_APP     = $NODE_APP; //Aplicacion Nodejs.
     $this->ADMIN_PASS   = $ADMIN_PASS; //Password para las peticiones.
@@ -21,7 +22,7 @@ class Node{
   private function writeFile($FILE, $STRING) {
     $now    = date("d-m-Y H:i:s -> ");
     $buffer = @fopen("$this->NODE_DIR/supervisor/$FILE", "a+");
-    @fwrite($buffer, $now.$STRING."\r");
+    @fwrite($buffer, $now.$this->DAEMON.": ".$STRING."\r");
     @fclose($buffer);
   }
 
@@ -35,14 +36,14 @@ class Node{
 
     if(!file_exists($this->NODE_DIR)) return $this->report(self::$UNDEFINE);
 
-    if(!file_exists("$this->NODE_DIR/supervisor")) mkdir("$this->NODE_DIR/supervisor", 0755, true);
+    if(!file_exists("$this->NODE_DIR/supervisor")) mkdir("$this->NODE_DIR/supervisor/pid", 0755, true);
 
     if($PASS !== $this->ADMIN_PASS){
       $this->writeFile("error.log", "ERROR PASSWORD.");
       return $this->report(self::$ERROR);
     }
 
-  	$node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid"));
+  	$node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON"));
 
     if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
 
@@ -55,7 +56,7 @@ class Node{
 
   	$node_pid = exec("$this->NODE_DIR/bin/node $file > /dev/null & echo $!");
 
-    @file_put_contents("$this->NODE_DIR/supervisor/pid", $node_pid, LOCK_EX);
+    @file_put_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON", $node_pid, LOCK_EX);
   	sleep(1); //Espera que se levante Notejs.
 
     if($node_pid > 0){
@@ -76,13 +77,13 @@ class Node{
       return $this->report(self::$ERROR);
     }
 
-    $node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid"));
+    $node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON"));
 
   	if($node_pid === 0) return $this->report(self::$NORUNNING);
 
     if(!file_exists("/proc/$node_pid")){
       $this->writeFile("error.log", "DOWN APP SERVER IN PID: $node_pid.");
-      @file_put_contents("$this->NODE_DIR/supervisor/pid", '', LOCK_EX);
+      @file_put_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON", '', LOCK_EX);
       return $this->report(self::$NORUNNING);
     }
 
@@ -91,7 +92,7 @@ class Node{
 
     if($ret === 0){
       $this->writeFile("access.log", "APP STOP IN PID: $node_pid.");
-      @file_put_contents("$this->NODE_DIR/supervisor/pid", '', LOCK_EX);
+      @file_put_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON", '', LOCK_EX);
       return $this->report(self::$STOP);
     }else{
       $this->writeFile("error.log", "ERROR STOP APP IN PID: $node_pid.");
@@ -100,7 +101,7 @@ class Node{
   }
 
   public function getStatus(){
-    $node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid"));
+    $node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON"));
     if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
     else return $this->report(self::$NORUNNING);
   }

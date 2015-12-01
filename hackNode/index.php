@@ -1,24 +1,21 @@
 <?php
 	header('Content-Type: application/json; charset=utf8');
-	require_once("node.php");
+	require_once("config.php");
 
-  define("NODE_DIR", "/home/formatcom/node");
-  define("NODE_APP", "/home/formatcom/index.js");
-  define("ADMIN_PASS", "12345Admin");
+  if (isset($_REQUEST["exec"]) && isset($_REQUEST["daemon"]) && isset($_REQUEST["pass"])){
 
-	$Node = new Node(NODE_DIR, NODE_APP, ADMIN_PASS);
+    $exec   = strtolower($_REQUEST["exec"]);
+    $daemon = $_REQUEST["daemon"];
+    $pass   = $_REQUEST["pass"];
 
-  if (isset($_REQUEST["exec"]) && isset($_REQUEST["pass"])){
-
-    $exec = strtolower($_REQUEST["exec"]);
-    $pass = $_REQUEST["pass"];
+		if(!isset($DAEMONS[$daemon])) die("{}");
 
     switch ($exec) {
       case "start":
-        echo $Node->start($pass);
+        echo $DAEMONS[$daemon]->start($pass);
         break;
       case "stop":
-        echo $Node->stop($pass);
+        echo $DAEMONS[$daemon]->stop($pass);
         break;
     }
   }
