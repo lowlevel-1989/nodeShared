@@ -46,6 +46,7 @@ class Node{
   	$node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON"));
 
     if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
+    elseif ($node_pid > 0) $this->writeFile("error.log", "DOWN APP SERVER IN PID: $node_pid.");
 
     if(!file_exists($this->NODE_APP)){
       $this->writeFile("error.log", "APP UNDEFINE.");
