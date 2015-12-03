@@ -6,8 +6,9 @@
     "node" => "/home/formatcom/node"
   );
 
+  // new Node('Name', 'bin', 'args')
   $DAEMONS = Array(
-    "admin" => new Node("Admin", NODE_DIR, "panel/server/index.js", ADMIN_PASS),
-    "app"   => new Node("App", NODE_DIR, "/home/formatcom/index.js", ADMIN_PASS)
+    "admin" => new Node("Admin", "node", "panel/server/index.js"),
+    "app"   => new Node("App", "node", "/home/formatcom/index.js")
   );
  ?>
