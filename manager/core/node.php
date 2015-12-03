@@ -1,5 +1,4 @@
 <?php
-require_once("processBackground.php");
 
 class Node{
 
@@ -11,55 +10,51 @@ class Node{
   private static $NORUNNING = 4;
   private static $STOP      = 5;
 
-  private $DAEMON, $NODE_DIR, $NODE_APP, $ADMIN_PASS;
+  private $DAEMON, $NODE_APP, $NODE_ARGS;
+  private $NODE_DIR = ENV::get('HOME').'/daemons';
 
-  public function Node($DAEMON, $NODE_DIR, $NODE_APP, $ADMIN_PASS) {
-    $this->DAEMON       = strtolower($DAEMON); //Nombre del daemon.
-    $this->NODE_DIR     = $NODE_DIR; //Carpeta de Nodejs.
-    $this->NODE_APP     = $NODE_APP; //Aplicacion Nodejs.
-    $this->ADMIN_PASS   = $ADMIN_PASS; //Password para las peticiones.
+  public function Node($DAEMON, $NODE_APP, $NODE_ARGS) {
+    $this->DAEMON       = strtolower($DAEMON);
+    $this->NODE_APP     = $NODE_APP;
+    $this->NODE_ARGS    = $NODE_ARGS;
   }
 
   private function writeFile($FILE, $STRING) {
-    $now    = date("d-m-Y H:i:s|");
-    $buffer = @fopen("$this->NODE_DIR/supervisor/$FILE", "a+");
-    @fwrite($buffer, $this->DAEMON."|".$now.$STRING."\r");
+    $now    = date('d-m-Y H:i:s|');
+    $buffer = @fopen("$this->NODE_DIR/$FILE", 'a+');
+    @fwrite($buffer, "$this->DAEMON|$now$STRING\r");
     @fclose($buffer);
   }
 
   private function report($STATUS) {
-    if ($STATUS === self::$START || $STATUS === self::$RUNNING) $data = array("running" => true, "status" => $STATUS);
-    else $data = array("running" => false, "status" => $STATUS);
+    if ($STATUS === self::$START || $STATUS === self::$RUNNING) $data = array('running' => true, 'status' => $STATUS);
+    else $data = array('running' => false, 'status' => $STATUS);
     return $_GET['callback']."([".json_encode($data)."])";
   }
 
   public function start($PASS) {
 
-    if(!file_exists($this->NODE_DIR)) return $this->report(self::$UNDEFINE);
+    // if(!file_exists($this->NODE_DIR)) return $this->report(self::$UNDEFINE); REESCRIBIR
 
-    if(!file_exists("$this->NODE_DIR/supervisor")) mkdir("$this->NODE_DIR/supervisor/pid", 0755, true);
+    if(!file_exists("$this->NODE_DIR")) mkdir("$this->NODE_DIR/pid", 0755, true);
 
-    if($PASS !== $this->ADMIN_PASS){
-      $this->writeFile("error.log", "ERROR PASSWORD.");
-      return $this->report(self::$ERROR);
-    }
+    // if($PASS !== $this->ADMIN_PASS){
+    //   $this->writeFile('error.log', 'ERROR PASSWORD.');
+    //   return $this->report(self::$ERROR);
+    // } REESCRIBIR
 
-  	$node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON"));
+  	$node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
 
     if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
-    elseif ($node_pid > 0) $this->writeFile("error.log", "DOWN APP SERVER IN PID: $node_pid.");
+    elseif ($node_pid > 0) $this->writeFile('error.log', "DOWN APP SERVER IN PID: $node_pid.");
 
-    if(!file_exists($this->NODE_APP)){
-      $this->writeFile("error.log", "APP UNDEFINE.");
-      return $this->report(self::$ERROR);
-    }
+    // if(!file_exists($this->NODE_APP)){
+    //   $this->writeFile('error.log', 'APP UNDEFINE.');
+    //   return $this->report(self::$ERROR);
+    // } REESCRIBIR
 
-  	$file = escapeshellarg($this->NODE_APP);
-
-  	$node_pid = exec("$this->NODE_DIR/bin/node $file > /dev/null & echo $!");
-
-    @file_put_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON", $node_pid, LOCK_EX);
-  	sleep(1); //Espera que se levante Notejs.
+  	$node_pid = processBackground($this->NODE_APP, $this->NODE_ARGS);
+    @file_put_contents("$this->NODE_DIR/pid/$this->DAEMON", $node_pid, LOCK_EX);
 
     if($node_pid > 0){
       $this->writeFile("access.log", "APP START IN PID: $node_pid.");
@@ -72,20 +67,20 @@ class Node{
 
   public function stop($PASS) {
 
-    if(!file_exists($this->NODE_DIR)) return $this->report(self::$UNDEFINE);
+    // if(!file_exists($this->NODE_DIR)) return $this->report(self::$UNDEFINE); REESCRIBIR
 
-    if($PASS !== $this->ADMIN_PASS){
-      $this->writeFile("error.log", "ERROR PASSWORD.");
-      return $this->report(self::$ERROR);
-    }
+    // if($PASS !== $this->ADMIN_PASS){
+    //   $this->writeFile("error.log", "ERROR PASSWORD.");
+    //   return $this->report(self::$ERROR);
+    // } REESCRIBIR
 
-    $node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON"));
+    $node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
 
   	if($node_pid === 0) return $this->report(self::$NORUNNING);
 
     if(!file_exists("/proc/$node_pid")){
-      $this->writeFile("error.log", "DOWN APP SERVER IN PID: $node_pid.");
-      @file_put_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON", '', LOCK_EX);
+      $this->writeFile('error.log', "DOWN APP SERVER IN PID: $node_pid.");
+      @file_put_contents("$this->NODE_DIR/pid/$this->DAEMON", '', LOCK_EX);
       return $this->report(self::$NORUNNING);
     }
 
@@ -93,21 +88,17 @@ class Node{
   	passthru("kill $node_pid", $ret);
 
     if($ret === 0){
-      $this->writeFile("access.log", "APP STOP IN PID: $node_pid.");
-      @file_put_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON", '', LOCK_EX);
+      $this->writeFile('access.log', "APP STOP IN PID: $node_pid.");
+      @file_put_contents("$this->NODE_DIR/pid/$this->DAEMON", '', LOCK_EX);
       return $this->report(self::$STOP);
     }else{
-      $this->writeFile("error.log", "ERROR STOP APP IN PID: $node_pid.");
+      $this->writeFile('error.log', "ERROR STOP APP IN PID: $node_pid.");
       return $this->report(self::$ERROR);
     }
   }
 
-  public function getStatus($PASS){
-    if($PASS !== $this->ADMIN_PASS){
-      $this->writeFile("error.log", "ERROR PASSWORD.");
-      return $this->report(self::$ERROR);
-    }
-    $node_pid = @intval(file_get_contents("$this->NODE_DIR/supervisor/pid/$this->DAEMON"));
+  public function getStatus(){
+    $node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
     if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
     else return $this->report(self::$NORUNNING);
   }

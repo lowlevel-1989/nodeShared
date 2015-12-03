@@ -1,14 +1,14 @@
 <?php
-  require_once("core/node.php");
-  define("ADMIN_PASS", "12345Admin");
+  require_once('core/index.php');
+  // define('ADMIN_PASS', '12345Admin'); REESCRIBIR
 
   $PATH = Array(
-    "node" => "/home/formatcom/node"
+    'node' => '/home/formatcom/node/bin'
   );
 
   // new Node('Name', 'bin', 'args')
-  $DAEMONS = Array(
-    "admin" => new Node("Admin", "node", "panel/server/index.js"),
-    "app"   => new Node("App", "node", "/home/formatcom/index.js")
+  $DAEMON = Array(
+    'admin' => new Node('Admin', 'node', 'panel/server/index.js'),
+    'app'   => new Node('App', 'node', '/home/formatcom/index.js')
   );
  ?>

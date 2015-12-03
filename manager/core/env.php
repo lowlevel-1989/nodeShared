@@ -1,19 +1,17 @@
 <?php
-  require_once("processBackground.php");
-
   class ENV{
-    public function set($ENV, $ARGS){
+    public static function set($ENV, $ARGS){
       processBackground("export $ENV=$ARGS");
     }
 
-    public function setPath($PATH){
+    public static function setPath($PATH){
       foreach ($PATH as $key => $value) {
-        $this->set("PATH", '$PATH:'.$value);
+        $this->set('PATH', '$PATH:'.$value);
       }
     }
 
-    public function get(){
+    public static function get($ENV){
+      return $_SERVER[$ENV]
     }
   }
-
 ?>
