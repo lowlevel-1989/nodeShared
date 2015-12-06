@@ -6,12 +6,12 @@
 
     public static function setPath($PATH){
       foreach ($PATH as $key => $value) {
-        $this->set('PATH', '$PATH:'.$value);
+        self::set('PATH', '$PATH:'.$value);
       }
     }
 
     public static function get($ENV){
-      return $_SERVER[$ENV]
+      return $_SERVER[$ENV];
     }
   }
 ?>
