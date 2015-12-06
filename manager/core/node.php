@@ -10,11 +10,12 @@ class Node{
   private static $NORUNNING = 4;
   private static $STOP      = 5;
 
-  private $DAEMON, $NODE_APP, $NODE_ARGS;
+  private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
   private $NODE_DIR = ENV::get('HOME').'/daemons';
 
-  public function Node($DAEMON, $NODE_APP, $NODE_ARGS) {
+  public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
     $this->DAEMON       = strtolower($DAEMON);
+    $this->NODE_ROOT    = $NODE_ROOT;
     $this->NODE_APP     = $NODE_APP;
     $this->NODE_ARGS    = $NODE_ARGS;
   }
@@ -52,6 +53,8 @@ class Node{
     //   $this->writeFile('error.log', 'APP UNDEFINE.');
     //   return $this->report(self::$ERROR);
     // } REESCRIBIR
+
+    chdir($this->NODE_ROOT);
 
   	$node_pid = processBackground($this->NODE_APP, $this->NODE_ARGS);
     @file_put_contents("$this->NODE_DIR/pid/$this->DAEMON", $node_pid, LOCK_EX);
