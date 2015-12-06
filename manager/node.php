@@ -10,11 +10,12 @@ class Node{
   private static $NORUNNING = 4;
   private static $STOP      = 5;
 
-  private $DAEMON, $NODE_DIR, $NODE_APP, $ADMIN_PASS;
+  private $DAEMON, $NODE_DIR, $NODE_ROOT, $NODE_APP, $ADMIN_PASS;
 
-  public function Node($DAEMON, $NODE_DIR, $NODE_APP, $ADMIN_PASS) {
+  public function Node($DAEMON, $NODE_DIR, $NODE_ROOT, $NODE_APP, $ADMIN_PASS) {
     $this->DAEMON       = strtolower($DAEMON); //Nombre del daemon.
     $this->NODE_DIR     = $NODE_DIR; //Carpeta de Nodejs.
+    $this->NODE_ROOT    = $NODE_ROOT;
     $this->NODE_APP     = $NODE_APP; //Aplicacion Nodejs.
     $this->ADMIN_PASS   = $ADMIN_PASS; //Password para las peticiones.
   }
@@ -54,6 +55,8 @@ class Node{
     }
 
   	$file = escapeshellarg($this->NODE_APP);
+
+    chdir($this->NODE_ROOT);
 
   	$node_pid = exec("$this->NODE_DIR/bin/node $file > /dev/null & echo $!");
 
