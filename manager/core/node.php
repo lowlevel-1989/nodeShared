@@ -11,7 +11,8 @@ class Node{
   private static $STOP      = 5;
 
   private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
-  private $NODE_DIR = ENV::get('HOME').'/daemons';
+  private $NODE_DIR  = ENV::get('HOME').'/daemons';
+  private $NODE_PASS = ENV::get('NODE_PASS');
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
     $this->DAEMON       = strtolower($DAEMON);
