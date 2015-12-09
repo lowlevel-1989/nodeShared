@@ -49,14 +49,14 @@ class Node{
     if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
     elseif ($node_pid > 0) $this->writeFile("error.log", "DOWN APP SERVER IN PID: $node_pid.");
 
+    chdir($this->NODE_ROOT);
+
     if(!file_exists($this->NODE_APP)){
       $this->writeFile("error.log", "APP UNDEFINE.");
       return $this->report(self::$ERROR);
     }
 
   	$file = escapeshellarg($this->NODE_APP);
-
-    chdir($this->NODE_ROOT);
 
   	$node_pid = exec("$this->NODE_DIR/bin/node $file > /dev/null & echo $!");
 
