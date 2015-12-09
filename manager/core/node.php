@@ -10,14 +10,15 @@ class Node{
   private static $STOP      = 4;
 
   private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
-  private $NODE_DIR  = '/home/formatcom/daemon';
-  private $NODE_PASS = '12345Admin';
+  private $NODE_DIR, $NODE_PASS;
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
     $this->DAEMON       = strtolower($DAEMON);
     $this->NODE_ROOT    = $NODE_ROOT;
     $this->NODE_APP     = $NODE_APP;
     $this->NODE_ARGS    = $NODE_ARGS;
+    $this->NODE_DIR     = getenv('HOME').'/daemon';
+    $this->NODE_PASS    = getenv('NODE_PASS');
   }
 
   private function writeFile($FILE, $STRING) {
@@ -29,7 +30,7 @@ class Node{
 
   private function report($STATUS) {
     if ($STATUS === self::$START || $STATUS === self::$RUNNING) $data = array('running' => true, 'status' => $STATUS);
-    else $data = array('running' => false, 'status' => $STATUS, 'test' => @getenv('NODE_PASS'));
+    else $data = array('running' => false, 'status' => $STATUS);
     return $_GET['callback']."([".json_encode($data)."])";
   }
 
