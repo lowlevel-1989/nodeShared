@@ -1,5 +1,6 @@
 <?php
 	header('Content-Type: application/json; charset=utf8');
+	require_once('public.php');
 	require_once('config.php');
 
   if (isset($_REQUEST['exec']) && isset($_REQUEST['daemon']) && isset($_REQUEST['pass'])){
