@@ -18,7 +18,7 @@ class Node{
     $this->NODE_APP     = $NODE_APP;
     $this->NODE_ARGS    = $NODE_ARGS;
     $this->NODE_DIR     = explode('/', $_SERVER['DOCUMENT_ROOT']);
-    $this->NODE_DIR     = "/$this->NODE_DIR[1]/$this->NODE_DIR[2]/daemon";
+    $this->NODE_DIR     = '/'.$this->NODE_DIR[1].'/'.$this->NODE_DIR[2].'/daemon';
     $this->NODE_PASS    = getenv('NODE_PASS');
   }
 
