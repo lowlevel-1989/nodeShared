@@ -3,12 +3,11 @@
 class Node{
 
   //List status.
-  private static $UNDEFINE  = 0;
-  private static $ERROR     = 1;
-  private static $START     = 2;
-  private static $RUNNING   = 3;
-  private static $NORUNNING = 4;
-  private static $STOP      = 5;
+  private static $ERROR     = 0;
+  private static $START     = 1;
+  private static $RUNNING   = 2;
+  private static $NORUNNING = 3;
+  private static $STOP      = 4;
 
   private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
   private $NODE_DIR  = ENV::get('HOME').'/daemons';
@@ -36,24 +35,17 @@ class Node{
 
   public function start($PASS) {
 
-    // if(!file_exists($this->NODE_DIR)) return $this->report(self::$UNDEFINE); REESCRIBIR
+    if(!file_exists($this->NODE_DIR)) mkdir("$this->NODE_DIR/pid", 0755, true);
 
-    if(!file_exists("$this->NODE_DIR")) mkdir("$this->NODE_DIR/pid", 0755, true);
-
-    // if($PASS !== $this->ADMIN_PASS){
-    //   $this->writeFile('error.log', 'ERROR PASSWORD.');
-    //   return $this->report(self::$ERROR);
-    // } REESCRIBIR
+    if($PASS !== $this->NODE_PASS){
+      $this->writeFile('error.log', 'ERROR PASSWORD.');
+      return $this->report(self::$ERROR);
+    }
 
   	$node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
 
     if(file_exists("/proc/$node_pid")) return $this->report(self::$RUNNING);
     elseif ($node_pid > 0) $this->writeFile('error.log', "DOWN APP SERVER IN PID: $node_pid.");
-
-    // if(!file_exists($this->NODE_APP)){
-    //   $this->writeFile('error.log', 'APP UNDEFINE.');
-    //   return $this->report(self::$ERROR);
-    // } REESCRIBIR
 
     chdir($this->NODE_ROOT);
 
@@ -71,12 +63,10 @@ class Node{
 
   public function stop($PASS) {
 
-    // if(!file_exists($this->NODE_DIR)) return $this->report(self::$UNDEFINE); REESCRIBIR
-
-    // if($PASS !== $this->ADMIN_PASS){
-    //   $this->writeFile("error.log", "ERROR PASSWORD.");
-    //   return $this->report(self::$ERROR);
-    // } REESCRIBIR
+    if($PASS !== $this->NODE_PASS){
+      $this->writeFile("error.log", "ERROR PASSWORD.");
+      return $this->report(self::$ERROR);
+    }
 
     $node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
 
