@@ -1,6 +1,6 @@
 <?php
   function writeHtaccess($ACCESS) {
-    $buffer = fopen('../.htaccess', 'w+');
+    $buffer = fopen('../.htaccess', 'a+');
     fwrite($buffer, "Options -Indexes\r\r");
     fwrite($buffer, "RewriteEngine On\r");
     foreach ($ACCESS as $key => $value) {
