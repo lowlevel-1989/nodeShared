@@ -1,7 +1,4 @@
 <?php
-  @require_once('../public.php');
-  echo getcwd();
-
   function writeHtaccess($ACCESS) {
     $buffer = @fopen("../.htaccess", 'a+');
     @fwrite($buffer, "Options -Indexes\r\r");
@@ -11,6 +8,4 @@
     }
     @fclose($buffer);
   }
-
-  writeHtaccess($URL); //var in ../public.php
 ?>
