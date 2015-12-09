@@ -11,7 +11,7 @@ class Node{
 
   private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
   private $NODE_DIR  = '/home/formatcom/daemon';
-  private $NODE_PASS = getenv('NODE_PASS');
+  private $NODE_PASS = '12345Admin';
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
     $this->DAEMON       = strtolower($DAEMON);
@@ -29,7 +29,7 @@ class Node{
 
   private function report($STATUS) {
     if ($STATUS === self::$START || $STATUS === self::$RUNNING) $data = array('running' => true, 'status' => $STATUS);
-    else $data = array('running' => false, 'status' => $STATUS);
+    else $data = array('running' => false, 'status' => $STATUS, 'test' => @getenv('NODE_PASS'));
     return $_GET['callback']."([".json_encode($data)."])";
   }
 
