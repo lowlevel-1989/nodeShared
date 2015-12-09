@@ -9,15 +9,15 @@ class Node{
   private static $NORUNNING = 3;
   private static $STOP      = 4;
 
-  private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS, $NODE_PASS;
-  private $NODE_DIR = exec('echo ~');
-  $NODE_DIR .= '/daemon';
+  private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
+  private $NODE_DIR, $NODE_PASS;
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
     $this->DAEMON       = strtolower($DAEMON);
     $this->NODE_ROOT    = $NODE_ROOT;
     $this->NODE_APP     = $NODE_APP;
     $this->NODE_ARGS    = $NODE_ARGS;
+    $this->NODE_DIR     = exec('echo ~').'/daemon';
     $this->NODE_PASS    = getenv('NODE_PASS');
   }
 
