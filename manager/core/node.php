@@ -11,8 +11,8 @@ class Node{
   private static $STOP      = 4;
 
   private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
-  private $NODE_DIR  = getenv('HOME').'/daemon';
-  private $NODE_PASS = getenv('NODE_PASS');
+  private $NODE_DIR  = '/home/formatcom/daemon';
+  private $NODE_PASS = '12345Admin';
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
     $this->DAEMON       = strtolower($DAEMON);
