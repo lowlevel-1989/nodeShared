@@ -17,7 +17,7 @@ class Node{
     $this->NODE_ROOT    = $NODE_ROOT;
     $this->NODE_APP     = $NODE_APP;
     $this->NODE_ARGS    = $NODE_ARGS;
-    $this->NODE_DIR     = exec('python node_dir.py');
+    $this->NODE_DIR     = system('python node_dir.py', $test);
     $this->NODE_PASS    = getenv('NODE_PASS');
   }
 
