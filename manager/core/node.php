@@ -9,15 +9,14 @@ class Node{
   private static $NORUNNING = 3;
   private static $STOP      = 4;
 
-  private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
-  private $NODE_DIR, $NODE_PASS;
+  private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS, $NODE_PASS;
+  private $NODE_DIR = exec('echo ~').'/daemon';
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
     $this->DAEMON       = strtolower($DAEMON);
     $this->NODE_ROOT    = $NODE_ROOT;
     $this->NODE_APP     = $NODE_APP;
     $this->NODE_ARGS    = $NODE_ARGS;
-    $this->NODE_DIR     = $_SERVER['HOME'].'/daemon';
     $this->NODE_PASS    = getenv('NODE_PASS');
   }
 
@@ -30,7 +29,7 @@ class Node{
 
   private function report($STATUS) {
     if ($STATUS === self::$START || $STATUS === self::$RUNNING) $data = array('running' => true, 'status' => $STATUS);
-    else $data = array('running' => false, 'status' => $STATUS, 'test' => $_SERVER);
+    else $data = array('running' => false, 'status' => $STATUS, 'test' => $this->NODE_DIR);
     return $_GET['callback']."([".json_encode($data)."])";
   }
 
