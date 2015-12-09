@@ -1,5 +1,4 @@
 <?php
-require_once('access.php');
 
 class Node{
 
@@ -55,7 +54,7 @@ class Node{
 
     if($node_pid > 0){
       $this->writeFile("access.log", "APP START IN PID: $node_pid.");
-      writeHtaccess($URL); //var in ../public.php
+      // writeHtaccess($URL); //var in ../public.php
       return $this->report(self::$START);
     }else{
       $this->writeFile("error.log", "ERROR APP START.");

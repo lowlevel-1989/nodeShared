@@ -10,4 +10,6 @@
     }
     @fclose($buffer);
   }
+
+  writeHtaccess($URL); //var in ../public.php
 ?>
