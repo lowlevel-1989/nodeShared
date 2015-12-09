@@ -1,5 +1,6 @@
 <?php
-  require_once('../public.php');
+  @require_once('../public.php');
+  echo getcwd();
 
   function writeHtaccess($ACCESS) {
     $buffer = @fopen("../.htaccess", 'a+');
