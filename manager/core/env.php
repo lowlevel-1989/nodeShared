@@ -14,9 +14,5 @@
         self::set('PATH', self::getPath().':'.$value);
       }
     }
-
-    public static function get($ENV){
-      return getenv($ENV);
-    }
   }
 ?>
