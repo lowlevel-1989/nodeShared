@@ -17,7 +17,8 @@ class Node{
     $this->NODE_ROOT    = $NODE_ROOT;
     $this->NODE_APP     = $NODE_APP;
     $this->NODE_ARGS    = $NODE_ARGS;
-    $this->NODE_DIR     = system('python node_dir.py', $test);
+    $this->NODE_DIR     = explode('/', $_SERVER['DOCUMENT_ROOT']);
+    $this->NODE_DIR     = "/$this->NODE_DIR[1]/$this->NODE_DIR[2]/daemon";
     $this->NODE_PASS    = getenv('NODE_PASS');
   }
 
@@ -30,7 +31,7 @@ class Node{
 
   private function report($STATUS) {
     if ($STATUS === self::$START || $STATUS === self::$RUNNING) $data = array('running' => true, 'status' => $STATUS);
-    else $data = array('running' => false, 'status' => $STATUS, 'test' => $this->NODE_DIR);
+    else $data = array('running' => false, 'status' => $STATUS, 'test' => $_SER);
     return $_GET['callback']."([".json_encode($data)."])";
   }
 
