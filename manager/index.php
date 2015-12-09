@@ -16,7 +16,7 @@
         echo $DAEMON[$name]->start($pass);
         break;
       case 'status':
-        echo $DAEMON[$name]->getStatus($pass);
+        echo $DAEMON[$name]->getStatus();
         break;
       case 'stop':
         echo $DAEMON[$name]->stop($pass);
