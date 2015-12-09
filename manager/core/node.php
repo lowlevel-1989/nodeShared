@@ -10,7 +10,8 @@ class Node{
   private static $STOP      = 4;
 
   private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS, $NODE_PASS;
-  private $NODE_DIR = exec('echo ~').'/daemon';
+  private $NODE_DIR = exec('echo ~');
+  $NODE_DIR .= '/daemon';
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
     $this->DAEMON       = strtolower($DAEMON);
