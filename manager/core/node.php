@@ -1,6 +1,5 @@
 <?php
 require_once('access.php');
-require_once('env.php');
 
 class Node{
 
@@ -12,7 +11,7 @@ class Node{
   private static $STOP      = 4;
 
   private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
-  private $NODE_DIR  = ENV::get('HOME').'/daemon';
+  private $NODE_DIR  = '/home/formatcom/daemon';
   private $NODE_PASS = ENV::get('NODE_PASS');
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
