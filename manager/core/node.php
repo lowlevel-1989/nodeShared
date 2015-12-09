@@ -31,7 +31,7 @@ class Node{
 
   private function report($STATUS) {
     if ($STATUS === self::$START || $STATUS === self::$RUNNING) $data = array('running' => true, 'status' => $STATUS);
-    else $data = array('running' => false, 'status' => $STATUS, 'test' => $this->NODE_DIR);
+    else $data = array('running' => false, 'status' => $STATUS);
     return $_GET['callback']."([".json_encode($data)."])";
   }
 
