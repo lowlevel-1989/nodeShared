@@ -11,7 +11,8 @@ class Node{
   private static $STOP      = 4;
 
   private $DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS;
-  private $NODE_DIR  = ENV::get('HOME').'/daemons';
+  private $NODE_DIR  = ENV::get('HOME');
+  $NODE_DIR .= '/daemon';
   private $NODE_PASS = ENV::get('NODE_PASS');
 
   public function Node($DAEMON, $NODE_ROOT, $NODE_APP, $NODE_ARGS) {
