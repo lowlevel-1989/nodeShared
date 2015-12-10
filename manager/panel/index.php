@@ -18,7 +18,7 @@
         data : data,
         dataType: 'jsonp',
         success : function(response) {
-          console.log(response);
+          if (response[0].running) window.location='../../admin/';
         }
       });
     });
