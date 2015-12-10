@@ -13,6 +13,7 @@
         "pass": <?php echo $pass; ?>
       };
       $.ajax({
+        url: '../index.php',
         type : 'POST',
         data : data,
         dataType: 'jsonp',
