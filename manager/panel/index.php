@@ -27,7 +27,7 @@
   }
 ?>
 
-<form method="post" id="login">
+<form method="post">
   <input type="password" name="pass" />
   <input type="submit" />
 </form>
