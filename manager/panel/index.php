@@ -10,7 +10,7 @@
       var data = {
         "daemon": "admin",
         "exec": "start",
-        "pass": <?php echo $pass; ?>
+        "pass": "<?php echo $pass; ?>"
       };
       $.ajax({
         url: '../index.php',
