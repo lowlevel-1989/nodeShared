@@ -1,5 +1,5 @@
 <?php
-  function processBackground($BIN, $ARGS=''){
-    return exec("$BIN $ARGS > /dev/null & echo $!");
+  function processBackground($SCRIPT){
+    return exec("$SCRIPT > /dev/null & echo $!");
   }
 ?>

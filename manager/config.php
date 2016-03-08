@@ -1,14 +1,15 @@
 <?php
   require_once('core/index.php');
-  ENV::set('NODE_PASS', '12345Admin');
+
+  ENV::set('NODE_KEY', '12345Admin');
 
   ENV::setPath(Array(
     'node' => '/home/formatcom/node/bin'
   ));
 
-  // new Node('Name', 'root', 'bin', 'args')
+  // new Node('Name', 'project dir', 'shell script')
   $DAEMON = Array(
-    'admin' => new Node('Admin', 'panel/server/', 'node', 'index.js'),
-    'app'   => new Node('App', '/home/formatcom/', 'node', 'index.js')
+    'admin' => new Node('Admin', 'gui/server/', 'PORT=49998 node .'),
+    'app'   => new Node('App',   '/home/formatcom/project/', 'node server.js')
   );
  ?>
