@@ -10,7 +10,7 @@
     $key  = $_GET['key'];
 
     if(!isset($DAEMON[$name])){
-      $data = Array('running' => false, 'state': 0);
+      $data = Array('running' => false, 'state' => 0);
       die($_GET['callback']."([".json_encode($data)."])");
     }
 
