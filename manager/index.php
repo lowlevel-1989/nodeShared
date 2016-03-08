@@ -3,14 +3,15 @@
   require_once('public.php');
   require_once('config.php');
 
-  if (isset($_REQUEST['exec']) && isset($_REQUEST['daemon'])){
+  if (isset($_GET['exec']) && isset($_GET['daemon'])){
 
-    $exec = strtolower($_REQUEST['exec']);
-    $name = $_REQUEST['daemon'];
-    $key  = $_REQUEST['key'];
+    $exec = strtolower($_GET['exec']);
+    $name = $_GET['daemon'];
+    $key  = $_GET['key'];
 
     if(!isset($DAEMON[$name])){
-      die($_GET['callback']."([".json_encode({})."])");
+      $data = Array('running' => false, 'state': 0);
+      die($_GET['callback']."([".json_encode($data)."])");
     }
 
     switch ($exec) {

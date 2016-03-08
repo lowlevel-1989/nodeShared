@@ -17,7 +17,7 @@ class Node{
     $this->NODE_ROOT   = $NODE_ROOT;
     $this->NODE_SCRIPT = $NODE_SCRIPT;
     $this->NODE_DIR    = explode('/', $_SERVER['DOCUMENT_ROOT']);
-    $this->NODE_DIR    = "/$this->NODE_DIR[1]/$this->NODE_DIR[2]/daemon";
+    $this->NODE_DIR    = '/'.$this->NODE_DIR[1].'/'.$this->NODE_DIR[2].'/daemon';
     $this->NODE_KEY    = getenv('NODE_KEY');
   }
 
@@ -74,7 +74,7 @@ class Node{
     }
   }
 
-  public function stop($key) {
+  public function stop($KEY) {
 
     if($KEY !== $this->NODE_KEY){
       $this->writeFile("error.log", "ERROR KEY.");

@@ -6,7 +6,7 @@
     'root'  => ['^(.*?)$', 'http://127.0.0.1:49999/$1']
   );
 
-  $EXCLUDE = Array('example') //EJEMPLO CON APACHE, carpeta example usara apache
+  $EXCLUDE = Array('example'); //EJEMPLO CON APACHE, carpeta example usara apache
 
   writeHtaccess($ROUTER, $EXCLUDE);
 ?>

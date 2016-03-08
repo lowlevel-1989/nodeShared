@@ -14,7 +14,7 @@
       };
       $.ajax({
         url: '/manager',
-        type : 'POST',
+        type : 'GET',
         data : data,
         dataType: 'jsonp',
         success : function(response) {
@@ -31,6 +31,6 @@
 ?>
 
 <form method="post">
-  <input type="password" name="pass" />
+  <input type="password" name="key" />
   <input type="submit" />
 </form>
