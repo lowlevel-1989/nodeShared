@@ -10,12 +10,13 @@ class Node{
   private static $STOP      = 4;
 
   private $DAEMON, $NODE_ROOT, $NODE_SCRIPT;
-  private $NODE_DIR, $NODE_KEY;
+  private $NODE_DIR, $NODE_KEY, $NODE_ACTIVE;
 
-  public function Node($DAEMON, $NODE_ROOT, $NODE_SCRIPT) {
+  public function Node($DAEMON, $NODE_ROOT, $NODE_SCRIPT, $NODE_ACTIVE = true) {
     $this->DAEMON      = strtolower($DAEMON);
     $this->NODE_ROOT   = $NODE_ROOT;
     $this->NODE_SCRIPT = $NODE_SCRIPT;
+    $this->NODE_ACTIVE = $NODE_ACTIVE;
     $this->NODE_DIR    = explode('/', $_SERVER['DOCUMENT_ROOT']);
     $this->NODE_DIR    = '/'.$this->NODE_DIR[1].'/'.$this->NODE_DIR[2].'/daemon';
     $this->NODE_KEY    = getenv('NODE_KEY');
@@ -24,7 +25,7 @@ class Node{
   private function writeFile($FILE, $STRING) {
     $now    = date('d-m-Y H:i:s|');
     $buffer = @fopen("$this->NODE_DIR/$FILE", 'a+');
-    @fwrite($buffer, "$this->DAEMON|$now$STRING\r");
+    @fwrite($buffer, "$this->DAEMON|$now$STRING\r\n");
     @fclose($buffer);
   }
 
@@ -38,6 +39,7 @@ class Node{
   }
 
   public function start($KEY) {
+
     if(!file_exists($this->NODE_DIR)){
       mkdir("$this->NODE_DIR/pid", 0755, true);
     }
@@ -45,6 +47,11 @@ class Node{
     if($KEY !== $this->NODE_KEY){
       $this->writeFile('error.log', 'ERROR KEY.');
       return $this->report(self::$ERROR);
+    }
+
+    if(!$this->NODE_ACTIVE){
+      $this->writeFile('error.log', 'DAEMON NO ACTIVE.');
+      return $this->return(self::$ERROR);
     }
 
     $node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));

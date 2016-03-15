@@ -7,9 +7,9 @@
     'node' => '/home/formatcom/node/bin'
   ));
 
-  // new Node('Name', 'project dir', 'shell script')
+  // new Node('Name', 'project dir', 'shell script', active)
   $DAEMON = Array(
     'admin' => new Node('Admin', 'gui/server/', 'PORT=49998 node .'),
-    'app'   => new Node('App',   '/home/formatcom/project/', 'node server.js')
+    'app'   => new Node('App',   '/home/formatcom/project/', 'node server.js', false)
   );
  ?>
