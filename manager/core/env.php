@@ -11,7 +11,7 @@
 
     public static function setPath($PATH){
       foreach ($PATH as $key => $value) {
-        self::set('PATH', self::getPath().':'.$value);
+        self::set('PATH', $value.':'.self::getPath());
       }
     }
   }
