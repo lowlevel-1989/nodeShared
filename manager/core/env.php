@@ -10,9 +10,11 @@
     }
 
     public static function setPath($PATH){
+      $temp = self::getPath();
       foreach ($PATH as $key => $value) {
-        self::set('PATH', $value.':'.self::getPath());
+        $temp += ":$value";  
       }
+      self::set('PATH', $temp);
     }
   }
 ?>

@@ -35,7 +35,7 @@ class Node{
     }else{
       $data = array('running' => false, 'status' => $STATUS);
     }  
-    return $_GET['callback']."([".json_encode($data)."])";
+    return $_GET['callback']."(".json_encode($data).")";
   }
 
   public function start($KEY) {

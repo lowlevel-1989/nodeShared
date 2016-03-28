@@ -11,7 +11,7 @@
 
     if(!isset($DAEMON[$name])){
       $data = Array('running' => false, 'state' => 0);
-      die($_GET['callback']."([".json_encode($data)."])");
+      die($_GET['callback']."(".json_encode($data).")");
     }
 
     switch ($exec) {
