@@ -13,6 +13,7 @@
     $admin_pass   = getenv('ADMIN_PASS');
 
     if ($admin_active){
+
       $version     = @file_get_contents('core/update');
       $new_version = @file_get_contents('https://formatcom.github.io/nodeShared/update');
 

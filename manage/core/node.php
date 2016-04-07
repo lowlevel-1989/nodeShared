@@ -48,9 +48,11 @@ class Node{
     }
 
 
-    if($KEY !== $this->NODE_KEY && ($this->NODE_ADMIN && $KEY !== $this->ADMIN_PASS)) {
-      $this->writeFile("error.log", "ERROR KEY.");
-      return $this->report(self::$ERROR);
+    if($KEY !== $this->NODE_KEY){
+      if (($this->NODE_ADMIN && $KEY !== $this->ADMIN_PASS) || !$this->NODE_ADMIN) {
+        $this->writeFile("error.log", "ERROR KEY.");
+        return $this->report(self::$ERROR);
+      }
     }
     
 
@@ -88,9 +90,11 @@ class Node{
 
   public function stop($KEY) {
 
-    if($KEY !== $this->NODE_KEY && ($this->NODE_ADMIN && $KEY !== $this->ADMIN_PASS)) {
-      $this->writeFile("error.log", "ERROR KEY.");
-      return $this->report(self::$ERROR);
+    if($KEY !== $this->NODE_KEY){
+      if (($this->NODE_ADMIN && $KEY !== $this->ADMIN_PASS) || !$this->NODE_ADMIN) {
+        $this->writeFile("error.log", "ERROR KEY.");
+        return $this->report(self::$ERROR);
+      }
     }
 
     $node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
