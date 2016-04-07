@@ -16,9 +16,6 @@
       $version     = @file_get_contents('core/update');
       $new_version = @file_get_contents('https://formatcom.github.io/nodeShared/update');
 
-      echo "$version\n";
-      echo "$new_version\n";
-
       if ($new_version > $version){
         $DAEMON['update'] = new Node('update', $admin_pass, getcwd(), 'sh core/update.sh core');
       }else if ($name === 'update'){

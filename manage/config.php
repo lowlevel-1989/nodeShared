@@ -2,13 +2,13 @@
   require_once('core/index.php');
 
   // SET ADMIN MODE
-  ENV::set('NODE_ADMIN', true);
+  ENV::set('NODE_ADMIN', false);
   ENV::set('ADMIN_PASS', 'password');
 
 
   // SET ENV PATH
   ENV::setPath(Array(
-    'node' => '/home/davecas/bin',
+    'node' => '/home/username/bin',
   ));
 
 
@@ -27,8 +27,6 @@
 
   // SET NEW DAEMONS
   $DAEMON = Array(
-    'test'  => new Node('test',  'password',     '/home/davecas',                  'ping -c 50 google.com', 1),
-    'shell' => new Node('shell', '19987187',     '/home/davecas/apps/shell_exec',  'PORT=30000 node node_modules/.bin/coffee src/server'),
-    'api'   => new Node('Api',   '20147555Dcas', '/home/davecas/apps/webzuliaapi', 'gunicorn -b 127.0.0.1:30001 webzuliaapi.wsgi:application', 1),
+    'test'  => new Node('test',  'password', '/home/username', 'ping -c 50 google.com', 1),
   );
  ?>
