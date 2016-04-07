@@ -1,7 +1,7 @@
 UPDATE=$1
 if [ "$UPDATE" = 'core' ]; then
   echo 'update core'
-  wget hhttps://formatcom.github.io/nodeShared/core.tar.gz --no-check-certificate
+  wget https://formatcom.github.io/nodeShared/core.tar.gz --no-check-certificate
   tar -xzvf core.tar.gz
   rm -f core.tar.gz
 else
