@@ -9,17 +9,20 @@ class Node{
   private static $NORUNNING = 3;
   private static $STOP      = 4;
 
-  private $DAEMON, $NODE_ROOT, $NODE_SCRIPT;
-  private $NODE_DIR, $NODE_KEY, $NODE_ACTIVE;
+  private $DAEMON,     $NODE_ROOT, $NODE_SCRIPT;
+  private $NODE_DIR,   $NODE_KEY,  $NODE_TYPE;
+  private $NODE_ADMIN, $ADMIN_PASS;
 
-  public function Node($DAEMON, $NODE_ROOT, $NODE_SCRIPT, $NODE_ACTIVE = true) {
+  public function Node($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_SCRIPT, $NODE_TYPE = 0) {
     $this->DAEMON      = strtolower($DAEMON);
     $this->NODE_ROOT   = $NODE_ROOT;
     $this->NODE_SCRIPT = $NODE_SCRIPT;
-    $this->NODE_ACTIVE = $NODE_ACTIVE;
+    $this->NODE_TYPE   = $NODE_TYPE;
     $this->NODE_DIR    = explode('/', $_SERVER['DOCUMENT_ROOT']);
     $this->NODE_DIR    = '/'.$this->NODE_DIR[1].'/'.$this->NODE_DIR[2].'/daemon';
-    $this->NODE_KEY    = getenv('NODE_KEY');
+    $this->NODE_ADMIN  = getenv('NODE_ADMIN');
+    $this->NODE_KEY    = $NODE_KEY;
+    $this->ADMIN_PASS  = getenv('ADMIN_PASS');
   }
 
   private function writeFile($FILE, $STRING) {
@@ -44,13 +47,15 @@ class Node{
       mkdir("$this->NODE_DIR/pid", 0755, true);
     }
 
-    if($KEY !== $this->NODE_KEY){
-      $this->writeFile('error.log', 'ERROR KEY.');
+
+    if($KEY !== $this->NODE_KEY && ($this->NODE_ADMIN && $KEY !== $this->ADMIN_PASS)) {
+      $this->writeFile("error.log", "ERROR KEY.");
       return $this->report(self::$ERROR);
     }
+    
 
-    if(!$this->NODE_ACTIVE){
-      $this->writeFile('error.log', 'DAEMON NO ACTIVE.');
+    if(!$this->NODE_ADMIN && $this->NODE_TYPE === 2){
+      $this->writeFile('error.log', "DAEMON NO ACTIVE. TYPE: $this->NODE_TYPE.");
       return $this->return(self::$ERROR);
     }
 
@@ -83,7 +88,7 @@ class Node{
 
   public function stop($KEY) {
 
-    if($KEY !== $this->NODE_KEY){
+    if($KEY !== $this->NODE_KEY && ($this->NODE_ADMIN && $KEY !== $this->ADMIN_PASS)) {
       $this->writeFile("error.log", "ERROR KEY.");
       return $this->report(self::$ERROR);
     }
@@ -98,6 +103,11 @@ class Node{
       $this->writeFile('error.log', "DOWN APP SERVER IN PID: $node_pid.");
       @file_put_contents("$this->NODE_DIR/pid/$this->DAEMON", '', LOCK_EX);
       return $this->report(self::$NORUNNING);
+    }
+
+    if(!$this->NODE_ADMIN && $this->NODE_TYPE === 1){
+      $this->writeFile('error.log', "DAEMON NO ACTIVE. TYPE: $this->NODE_TYPE.");
+      return $this->report(self::$ERROR);
     }
 
     $ret = -1;

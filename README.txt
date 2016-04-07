@@ -1,6 +1,6 @@
 MANAGER METHODS GET -> RETURN JSONP
 
-  https://example.com/manager
+  https://example.com/manage
 
   ARGS:
 
@@ -16,4 +16,3 @@ LIST STATES
   2 === RUNNING   | NO ACTION
   3 === NORUNNING | NO ACTION
   4 === STOP      | STOP THE DAEMON
-
