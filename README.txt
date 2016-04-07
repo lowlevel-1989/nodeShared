@@ -1,4 +1,4 @@
-MANAGER METHODS GET -> RETURN JSONP
+MANAGE METHODS GET -> RETURN JSONP
 
   https://example.com/manage
 
