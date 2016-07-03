@@ -18,7 +18,7 @@ class Node{
     $this->NODE_ROOT   = $NODE_ROOT;
     $this->NODE_SCRIPT = $NODE_SCRIPT;
     $this->NODE_TYPE   = $NODE_TYPE;
-    $this->NODE_DIR    = explode('/', $_SERVER['DOCUMENT_ROOT']);
+    $this->NODE_DIR    = explode('/', getcwd());
     $this->NODE_DIR    = '/'.$this->NODE_DIR[1].'/'.$this->NODE_DIR[2].'/daemon';
     $this->NODE_ADMIN  = getenv('NODE_ADMIN');
     $this->NODE_KEY    = $NODE_KEY;
