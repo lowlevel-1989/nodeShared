@@ -22,6 +22,7 @@ REQUIREMENTS
   1.- hosting shared on linux
   2.- safe mode off
   3.- functions enabled: exec, passthru
+  4.- apache mod_rewrite enabled
 
 
 
