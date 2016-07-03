@@ -16,3 +16,15 @@ LIST STATES
   2 === RUNNING   | NO ACTION
   3 === NORUNNING | NO ACTION
   4 === STOP      | STOP THE DAEMON
+
+REQUIREMENTS
+  
+  1.- hosting shared on linux
+  2.- safe mode off
+  3.- functions enabled: exec, passthru
+
+
+
+
+
+
