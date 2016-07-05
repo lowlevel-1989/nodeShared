@@ -49,7 +49,7 @@ class Node{
     }  
     if ($this->NODE_DEBUG){
       $data['pid']     = $PID;
-      $data['version'] = '0.2.2';
+      $data['version'] = '0.2.3';
       $data['type']    = $this->NODE_TYPE;
       $data['watch']   = $this->NODE_WATCH;
     }

@@ -33,7 +33,7 @@
       $new_version = @file_get_contents('https://formatcom.github.io/nodeShared/update');
 
       if ($new_version > $version){
-        $DAEMON['update'] = new Node('update', $admin_pass, '.', 'dos2unix core/update.sh and sh core/update.sh core', 1, false, true);
+        $DAEMON['update'] = new Node('update', $admin_pass, '.', 'dos2unix core/update.sh && sh core/update.sh core', 1, false, true);
       }else if ($name === 'update'){
         die('You have the most recent version.');
       }
