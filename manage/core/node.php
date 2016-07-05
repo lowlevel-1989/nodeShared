@@ -9,64 +9,93 @@ class Node{
   private static $NORUNNING = 3;
   private static $STOP      = 4;
 
-  private $DAEMON,     $NODE_ROOT, $NODE_SCRIPT;
-  private $NODE_DIR,   $NODE_KEY,  $NODE_TYPE;
-  private $NODE_ADMIN, $ADMIN_PASS;
+  private $DAEMON,       $NODE_ROOT,    $NODE_SCRIPT;
+  private $NODE_DIR,     $NODE_KEY,     $NODE_TYPE;
+  private $NODE_ADMIN,   $ADMIN_PASS,   $NODE_WATCH;
+  private $NODE_DIR_LOG, $NODE_DIR_PID, $PATH_BIN;
+  private $NODE_REPORT,  $NODE_DEBUG,   $NODE_ROOT_DIR;
 
-  public function Node($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_SCRIPT, $NODE_TYPE = 0) {
-    $this->DAEMON      = strtolower($DAEMON);
-    $this->NODE_ROOT   = $NODE_ROOT;
-    $this->NODE_SCRIPT = $NODE_SCRIPT;
-    $this->NODE_TYPE   = $NODE_TYPE;
-    $this->NODE_DIR    = explode('/', getcwd());
-    $this->NODE_DIR    = '/'.$this->NODE_DIR[1].'/'.$this->NODE_DIR[2].'/daemon';
-    $this->NODE_ADMIN  = getenv('NODE_ADMIN');
-    $this->NODE_KEY    = $NODE_KEY;
-    $this->ADMIN_PASS  = getenv('ADMIN_PASS');
+  public function Node($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_SCRIPT, $NODE_TYPE, $NODE_WATCH, $NODE_REPORT) {
+    $this->DAEMON        = strtolower($DAEMON);
+    $this->NODE_ROOT     = $NODE_ROOT;
+    $this->NODE_SCRIPT   = $NODE_SCRIPT;
+    $this->NODE_TYPE     = $NODE_TYPE;
+    $this->NODE_ROOT_DIR = getenv('NODE_PUBLIC').'/manage';
+    $this->PATH_BIN      = $this->NODE_ROOT_DIR.'/core';
+    $this->NODE_DIR      = getenv('NODE_HOME').'/daemon';
+    $this->NODE_DIR_PID  = $this->NODE_DIR.'/pid';
+    $this->NODE_DIR_LOG  = $this->NODE_DIR.'/'.$this->DAEMON;
+    $this->NODE_ADMIN    = getenv('NODE_ADMIN');
+    $this->NODE_KEY      = $NODE_KEY;
+    $this->ADMIN_PASS    = getenv('NODE_ADMIN_PASS');
+    $this->NODE_WATCH    = $NODE_WATCH;
+    $this->NODE_REPORT   = $NODE_REPORT;
+    $this->NODE_DEBUG    = getenv('NODE_DEBUG');
+    $this->MAIL          = getenv('NODE_MAIL');
   }
 
   private function writeFile($FILE, $STRING) {
     $now    = date('d-m-Y H:i:s|');
-    $buffer = @fopen("$this->NODE_DIR/$FILE", 'a+');
-    @fwrite($buffer, "$this->DAEMON|$now$STRING\r\n");
+    $buffer = @fopen($this->NODE_DIR_LOG.'/'.$FILE, 'a+');
+    @fwrite($buffer, $now.$STRING."\r\n");
     @fclose($buffer);
   }
 
-  private function report($STATUS) {
+  private function report($STATUS, $PID=null) {
     if ($STATUS === self::$START || $STATUS === self::$RUNNING){
       $data = array('running' => true,  'status' => $STATUS);
     }else{
       $data = array('running' => false, 'status' => $STATUS);
     }  
-    return $_GET['callback']."(".json_encode($data).")";
+    if ($this->NODE_DEBUG){
+      $data['pid']     = $PID;
+      $data['version'] = '0.2.0';
+      $data['type']    = $this->NODE_TYPE;
+      $data['watch']   = $this->NODE_WATCH;
+    }
+    return $_GET['callback'].'('.json_encode($data).')';
   }
 
   public function start($KEY) {
 
     if(!file_exists($this->NODE_DIR)){
-      mkdir("$this->NODE_DIR/pid", 0755, true);
+      mkdir($this->NODE_DIR_PID, 0755, true);
+      mkdir($this->NODE_DIR_LOG, 0755, true);
     }
-
 
     if($KEY !== $this->NODE_KEY){
       if (($this->NODE_ADMIN && $KEY !== $this->ADMIN_PASS) || !$this->NODE_ADMIN) {
-        $this->writeFile("error.log", "ERROR KEY.");
+        $this->writeFile('error.log', 'ERROR KEY.');
+
+        if ($this->NODE_REPORT){
+          mail($this->MAIL, 'NODESHARED->ERROR: '.$this->DAEMON, 'ERROR KEY.');
+        }
+
         return $this->report(self::$ERROR);
       }
     }
     
-
     if(!$this->NODE_ADMIN && $this->NODE_TYPE === 2){
-      $this->writeFile('error.log', "DAEMON NO ACTIVE. TYPE: $this->NODE_TYPE.");
+      $this->writeFile('error.log', 'DAEMON NO ACTIVE. TYPE: '.$this->NODE_TYPE.'.');
       return $this->return(self::$ERROR);
     }
 
-    $node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
+    $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
 
-    if(@file_exists("/proc/$node_pid")){
-      return $this->report(self::$RUNNING);
+    if ( (execute($this->PATH_BIN.'/pid.py', $node_pid, true) === 'True') and $node_pid !== 0){
+      return $this->report(self::$RUNNING, $node_pid);
     }elseif ($node_pid > 0){
-      $this->writeFile('error.log', "DOWN APP SERVER IN PID: $node_pid.");
+      if ($this->NODE_WATCH === 1){
+        $this->writeFile('error.log', 'DOWN APP SERVER IN PID: '.$node_pid.'.');
+        if ($this->NODE_REPORT){
+          mail($this->MAIL, 'NODESHARED->ERROR: '.$this->DAEMON, 'DOWN APP SERVER IN PID: '.$node_pid.'.');
+        }
+      }else{
+        $this->writeFile('access.log', 'APP STOP IN PID: '.$node_pid.'.');
+        if ($this->NODE_REPORT){
+          mail($this->MAIL, 'NODESHARED->STOP: '.$this->DAEMON, 'APP STOP IN PID: '.$node_pid.'.');
+        }
+      }
     }
 
     if(!file_exists($this->NODE_ROOT)){
@@ -76,62 +105,80 @@ class Node{
 
     chdir($this->NODE_ROOT);
 
-    $node_pid = processBackground($this->NODE_SCRIPT);
-    @file_put_contents("$this->NODE_DIR/pid/$this->DAEMON", $node_pid, LOCK_EX);
+    execute($this->PATH_BIN.'/exec.py', $this->NODE_DIR_PID.' '.$this->NODE_DIR_LOG.' '.$this->DAEMON.' '.$this->NODE_SCRIPT);
+    sleep(1);
+
+    $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
 
     if($node_pid > 0){
-      $this->writeFile("access.log", "APP START IN PID: $node_pid.");
-      return $this->report(self::$START);
+      $this->writeFile('access.log', 'APP START IN PID: '.$node_pid.'.');
+      if ($this->NODE_REPORT){
+        mail($this->MAIL, 'NODESHARED->START: '.$this->DAEMON, 'APP START IN PID: '.$node_pid.'.');
+      }
+      return $this->report(self::$START, $node_pid);
     }else{
-      $this->writeFile("error.log", "ERROR APP START.");
+      $this->writeFile('error.log', 'ERROR APP START.');
       return $this->report(self::$ERROR);
     }
+
   }
 
   public function stop($KEY) {
 
     if($KEY !== $this->NODE_KEY){
       if (($this->NODE_ADMIN && $KEY !== $this->ADMIN_PASS) || !$this->NODE_ADMIN) {
-        $this->writeFile("error.log", "ERROR KEY.");
+        $this->writeFile('error.log', 'ERROR KEY.');
+        if ($this->NODE_REPORT){
+          mail($this->MAIL, 'NODESHARED->ERROR: '.$this->DAEMON, 'ERROR KEY.');
+        }
         return $this->report(self::$ERROR);
       }
     }
 
-    $node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
+    $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
 
     if($node_pid === 0){
       return $this->report(self::$NORUNNING);
     }
 
-    if(!file_exists("/proc/$node_pid")){
-      $this->writeFile('error.log', "DOWN APP SERVER IN PID: $node_pid.");
-      @file_put_contents("$this->NODE_DIR/pid/$this->DAEMON", '', LOCK_EX);
+    if (execute($this->PATH_BIN.'/pid.py', $node_pid, true) === 'False'){
+      if ($this->NODE_WATCH === 1){
+        $this->writeFile('error.log', 'DOWN APP SERVER IN PID: '.$node_pid.'.');
+        if ($this->NODE_REPORT){
+          mail($this->MAIL, 'NODESHARED->ERROR: '.$this->DAEMON, 'DOWN APP SERVER IN PID: '.$node_pid.'.');
+        }
+      }else{
+        $this->writeFile('access.log', 'APP STOP IN PID: '.$node_pid.'.');
+      }
+      @file_put_contents($this->NODE_DIR_PID.'/'.$this->DAEMON, '', LOCK_EX);
       return $this->report(self::$NORUNNING);
     }
 
     if(!$this->NODE_ADMIN && $this->NODE_TYPE === 1){
-      $this->writeFile('error.log', "DAEMON NO ACTIVE. TYPE: $this->NODE_TYPE.");
+      $this->writeFile('error.log', 'DAEMON NO ACTIVE. TYPE: '.$this->NODE_TYPE.'.');
       return $this->report(self::$ERROR);
     }
 
-    $ret = -1;
-    passthru("kill $node_pid", $ret);
-
-    if($ret === 0){
-      $this->writeFile('access.log', "APP STOP IN PID: $node_pid.");
-      @file_put_contents("$this->NODE_DIR/pid/$this->DAEMON", '', LOCK_EX);
-      return $this->report(self::$STOP);
+    if (execute($this->PATH_BIN.'/kill.py', $node_pid, true) === 'True'){
+      $this->writeFile('access.log', 'APP STOP IN PID: '.$node_pid.'.');
+      @file_put_contents($this->NODE_DIR_PID.'/'.$this->DAEMON, '', LOCK_EX);
+      if ($this->NODE_REPORT){
+        mail($this->MAIL, 'NODESHARED->STOP: '.$this->DAEMON, 'APP STOP IN PID: '.$node_pid.'.');
+      }
+      return $this->report(self::$STOP, $node_pid);
     }else{
-      $this->writeFile('error.log', "ERROR STOP APP IN PID: $node_pid.");
-      return $this->report(self::$ERROR);
+      $this->writeFile('error.log', 'ERROR STOP APP IN PID: '.$node_pid.'.');
+      return $this->report(self::$ERROR, $node_pid);
     }
   }
 
   public function getStatus(){
-    $node_pid = @intval(file_get_contents("$this->NODE_DIR/pid/$this->DAEMON"));
-    if(file_exists("/proc/$node_pid")){
+    $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
+    
+    if ( (execute($this->PATH_BIN.'/pid.py', $node_pid, true) === 'True') and $node_pid !== 0){
       return $this->report(self::$RUNNING);
     }else{
+      @file_put_contents($this->NODE_DIR_PID.'/'.$this->DAEMON, '', LOCK_EX);
       return $this->report(self::$NORUNNING);
     }
   }
