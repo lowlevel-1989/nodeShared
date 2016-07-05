@@ -179,7 +179,7 @@ class Node{
     $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
     
     if ( (execute($this->PATH_BIN.'/pid.py', $node_pid, true) === 'True') and $node_pid !== 0){
-      return $this->report(self::$RUNNING);
+      return $this->report(self::$RUNNING, $node_pid);
     }else{
       @file_put_contents($this->NODE_DIR_PID.'/'.$this->DAEMON, '', LOCK_EX);
       return $this->report(self::$NORUNNING);
