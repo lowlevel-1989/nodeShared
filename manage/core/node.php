@@ -49,7 +49,7 @@ class Node{
     }  
     if ($this->NODE_DEBUG){
       $data['pid']     = $PID;
-      $data['version'] = '0.2.0';
+      $data['version'] = '0.2.1';
       $data['type']    = $this->NODE_TYPE;
       $data['watch']   = $this->NODE_WATCH;
     }
@@ -60,6 +60,9 @@ class Node{
 
     if(!file_exists($this->NODE_DIR)){
       mkdir($this->NODE_DIR_PID, 0755, true);
+    }
+
+    if(!file_exists($this->NODE_DIR_LOG)){
       mkdir($this->NODE_DIR_LOG, 0755, true);
     }
 
