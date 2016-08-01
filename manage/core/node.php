@@ -14,13 +14,15 @@ class Node{
   private $NODE_ADMIN,   $ADMIN_PASS,   $NODE_WATCH;
   private $NODE_DIR_LOG, $NODE_DIR_PID, $PATH_BIN;
   private $NODE_REPORT,  $NODE_DEBUG,   $NODE_ROOT_DIR;
+  private $NODE_ENV;
 
-  public function Node($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_SCRIPT, $NODE_TYPE, $NODE_WATCH, $NODE_REPORT) {
+  public function Node($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_ENV, $NODE_SCRIPT, $NODE_TYPE, $NODE_WATCH, $NODE_REPORT) {
     $this->DAEMON        = strtolower($DAEMON);
     $this->NODE_ROOT     = $NODE_ROOT;
+    $this->NODE_ENV      = $NODE_ENV;
     $this->NODE_SCRIPT   = $NODE_SCRIPT;
     $this->NODE_TYPE     = $NODE_TYPE;
-    $this->NODE_ROOT_DIR = getenv('NODE_PUBLIC').'/manage';
+    $this->NODE_ROOT_DIR = getenv('NODE_PUBLIC');
     $this->PATH_BIN      = $this->NODE_ROOT_DIR.'/core';
     $this->NODE_DIR      = getenv('NODE_HOME').'/daemon';
     $this->NODE_DIR_PID  = $this->NODE_DIR.'/pid';
@@ -49,11 +51,11 @@ class Node{
     }  
     if ($this->NODE_DEBUG){
       $data['pid']     = $PID;
-      $data['version'] = '0.2.4';
+      $data['version'] = @trim(file_get_contents(dirname(__FILE__).'/version'));
       $data['type']    = $this->NODE_TYPE;
       $data['watch']   = $this->NODE_WATCH;
     }
-    return $_GET['callback'].'('.json_encode($data).')';
+    return json_encode($data);
   }
 
   public function start($KEY) {
@@ -108,7 +110,7 @@ class Node{
 
     chdir($this->NODE_ROOT);
 
-    execute($this->PATH_BIN.'/exec.py', $this->NODE_DIR_PID.' '.$this->NODE_DIR_LOG.' '.$this->DAEMON.' '.$this->NODE_SCRIPT);
+    execute($this->PATH_BIN.'/exec.py', $this->NODE_DIR_PID.' '.$this->NODE_DIR_LOG.' '.$this->DAEMON.' '.json_encode($this-NODE_ENV).' '.$this->NODE_SCRIPT);
     sleep(1);
 
     $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
@@ -120,7 +122,7 @@ class Node{
       }
       return $this->report(self::$START, $node_pid);
     }else{
-      $this->writeFile('error.log', 'ERROR APP START.');
+      $this->writeFile('error.log', 'ERROR APP START. '.$node_pid);
       return $this->report(self::$ERROR);
     }
 

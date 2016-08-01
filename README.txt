@@ -1,6 +1,7 @@
-MANAGE METHODS GET -> RETURN JSONP
+MANAGE METHODS GET/POST
 
   https://example.com/manage/deamon/exec/key
+  https://example.com/manage/?daemon=app&exec=start&key=password
 
   ARGS:
 
@@ -10,7 +11,7 @@ MANAGE METHODS GET -> RETURN JSONP
 
 COMMAND LINE
 
-  NODE_PUBLIC=/home/username/www php manage/index.php daemon exec key
+  php manage/index.php daemon exec key
 
 LIST STATES
   
@@ -34,3 +35,28 @@ REQUIREMENTS VERSION PYTHON (working)
   3.- apache mod_rewrite enabled
 
 
+
+SYNTAX NEW NODE DAEMON => manage/config.php
+
+  new Node('Name', password, 'project dir', env,  'shell script', modo, watch, report)
+
+  - ENV
+    
+      Array(
+        'PORT' => 3000,
+      )
+
+  - MODO
+
+      0 === [START | STOP]
+      1 ===      START
+      2 ===      STOP
+
+  - WATCH
+
+      false => use in script
+      true  => use in app/server
+
+  - REPORT
+
+      true/false (send mail)

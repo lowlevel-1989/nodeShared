@@ -2,6 +2,6 @@ Options -Multiviews
 Options -Indexes
 
 RewriteEngine On
-RewriteRule '(.*)/(.*)/(.*)' index.php?daemon=$1&exec=$2&key=$3&callback=json_callback
+RewriteRule '(.*)/(.*)/(.*)' index.php?daemon=$1&exec=$2&key=$3
 
 ErrorDocument 404 ' '
