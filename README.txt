@@ -26,6 +26,7 @@ REQUIREMENTS VERSION PHP
   1.- hosting shared on linux
   2.- functions enabled: exec
   3.- apache mod_rewrite enabled
+  4.- apache mod_proxy   enabled
 
 
 REQUIREMENTS VERSION PYTHON (working)
@@ -33,6 +34,7 @@ REQUIREMENTS VERSION PYTHON (working)
   1.- hosting shared on linux
   2.- apache cgi_module  enabled
   3.- apache mod_rewrite enabled
+  4.- apache mod_proxy   enabled
 
 
 

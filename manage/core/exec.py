@@ -9,7 +9,7 @@ success     = '%s/app_success.log' % path_log
 error       = '%s/app_error.log'   % path_log
 pid         = '%s/%s' % (path_pid, daemon)
 
-environment = {}
+environment = os.environ
 envs = envs.split(',')
 
 def setEnv(i, x):
