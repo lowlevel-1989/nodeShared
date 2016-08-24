@@ -55,7 +55,14 @@ class Node{
       $data['type']    = $this->NODE_TYPE;
       $data['watch']   = $this->NODE_WATCH;
     }
-    return json_encode($data);
+    if (isset($argv[1]) and isset($argv[2])){
+      $shell_print = "running: ".$data['running']."\r"; 
+      $shell_print .= "status: ".$data['status']."\r"; 
+      $shell_print .= "pid: ".$PID."\r"; 
+      return $shell_print;
+    }else{
+      return json_encode($data);
+    }
   }
 
   public function start($KEY) {
@@ -110,7 +117,7 @@ class Node{
 
     chdir($this->NODE_ROOT);
 
-    execute($this->PATH_BIN.'/exec.py', $this->NODE_DIR_PID.' '.$this->NODE_DIR_LOG.' '.$this->DAEMON.' '.json_encode($this-NODE_ENV).' '.$this->NODE_SCRIPT);
+    execute($this->PATH_BIN.'/exec.py', $this->NODE_DIR_PID.' '.$this->NODE_DIR_LOG.' '.$this->DAEMON.' '.json_encode($this->NODE_ENV).' '.$this->NODE_SCRIPT);
     sleep(1);
 
     $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
