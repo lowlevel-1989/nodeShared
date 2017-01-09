@@ -51,7 +51,7 @@
 	// crea el daemon update
 	// es el encargado de actualizar
 	// nodeShared
-        $DAEMON['update'] = new Node('update', $admin_pass, '.', Array(), 'dos2unix nodeShared/update.sh && sh nodeShared/update.sh core', 1, false, true);
+        $DAEMON['update'] = new Node('update', $admin_pass, '.', 'dos2unix nodeShared/update.sh && sh nodeShared/update.sh core', 1, false, true);
       }else if ($name === 'update'){
         die('You have the most recent version.');
       }

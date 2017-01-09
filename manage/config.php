@@ -14,18 +14,18 @@
   ENV::set('NODE_MAIL', 'formatcomvinicio@gmail.com');
   ENV::set('NODE_ACCESS', 'https://formatcom.alwaysdata.net');
 
+
+
   // SET ENV PATH
   ENV::setPath(Array(
-    'node' => '/home/username/bin',
+    // https://nodejs.org/dist/v6.9.4/node-v6.9.4-linux-x64.tar.xz
+    'node' => '/home/formatcom/node-v6.9.4-linux-x64/bin'
   ));
 
   /*
    * SYNTAX NEW NODE DAEMON
    *
-   * new Node('Name', password, 'project dir', env,  'shell script', modo, watch, report)
-   * env  = Array(
-   *    'PORT' => 3000,
-   *    )
+   * new Node('Name', password, 'project dir', 'shell script', modo, watch, report)
    * MODO = [
    *   0 => (START | STOP)
    *   1 =>     START
@@ -42,7 +42,7 @@
 
   // SET NEW DAEMONS
   $DAEMON = Array(
-    'google' => new Node('google', '123456', '/home/formatcom', Array(), 'ping -c 50 google.com', 0, false, false),
+    'app' => new Node('app', '123456', '/home/formatcom/app', 'PORT=8000 node index.js', 0, true, false)
   );
 
 

@@ -40,13 +40,7 @@ REQUIREMENTS VERSION PYTHON (working)
 
 SYNTAX NEW NODE DAEMON => manage/config.php
 
-  new Node('Name', password, 'project dir', env,  'shell script', modo, watch, report)
-
-  - ENV
-    
-      Array(
-        'PORT' => 3000,
-      )
+  new Node('Name', password, 'project dir', 'shell script', modo, watch, report)
 
   - MODO
 

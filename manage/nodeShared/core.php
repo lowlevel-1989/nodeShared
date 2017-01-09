@@ -2,7 +2,7 @@
 
 class Node{
 
-  //List status.
+  // lista de posibles estados.
   private static $ERROR     = 0;
   private static $START     = 1;
   private static $RUNNING   = 2;
@@ -14,16 +14,14 @@ class Node{
   private $NODE_ADMIN,   $ADMIN_PASS,   $NODE_WATCH;
   private $NODE_DIR_LOG, $NODE_DIR_PID, $PATH_BIN;
   private $NODE_REPORT,  $NODE_DEBUG,   $NODE_ROOT_DIR;
-  private $NODE_ENV;
 
-  public function Node($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_ENV, $NODE_SCRIPT, $NODE_TYPE, $NODE_WATCH, $NODE_REPORT) {
+  public function Node($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_SCRIPT, $NODE_TYPE, $NODE_WATCH, $NODE_REPORT) {
     $this->DAEMON        = strtolower($DAEMON);
     $this->NODE_ROOT     = $NODE_ROOT;
-    $this->NODE_ENV      = $NODE_ENV;
     $this->NODE_SCRIPT   = $NODE_SCRIPT;
     $this->NODE_TYPE     = $NODE_TYPE;
     $this->NODE_ROOT_DIR = getenv('NODE_PUBLIC');
-    $this->PATH_BIN      = $this->NODE_ROOT_DIR.'/core';
+    $this->PATH_BIN      = $this->NODE_ROOT_DIR.'/nodeShared';
     $this->NODE_DIR      = getenv('NODE_HOME').'/daemon';
     $this->NODE_DIR_PID  = $this->NODE_DIR.'/pid';
     $this->NODE_DIR_LOG  = $this->NODE_DIR.'/'.$this->DAEMON;
@@ -58,7 +56,7 @@ class Node{
     if (isset($argv[1]) and isset($argv[2])){
       $shell_print = "running: ".$data['running']."\r"; 
       $shell_print .= "status: ".$data['status']."\r"; 
-      $shell_print .= "pid: ".$PID."\r"; 
+      $shell_print .= "pid: ".$PID."\r\r\r"; 
       return $shell_print;
     }else{
       return json_encode($data);
@@ -94,7 +92,7 @@ class Node{
 
     $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
 
-    if ( (execute($this->PATH_BIN.'/pid.py', $node_pid, true) === 'True') and $node_pid !== 0){
+    if ( (execute('python '.$this->PATH_BIN.'/pid.py '.$node_pid) === 'True') and $node_pid !== 0){
       return $this->report(self::$RUNNING, $node_pid);
     }elseif ($node_pid > 0){
       if ($this->NODE_WATCH === 1){
@@ -117,10 +115,7 @@ class Node{
 
     chdir($this->NODE_ROOT);
 
-    execute($this->PATH_BIN.'/exec.py', $this->NODE_DIR_PID.' '.$this->NODE_DIR_LOG.' '.$this->DAEMON.' '.json_encode($this->NODE_ENV).' '.$this->NODE_SCRIPT);
-    sleep(1);
-
-    $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
+    $node_pid = @intval(execute($this->NODE_SCRIPT, $this->DAEMON, $this->NODE_DIR_PID, $this->NODE_DIR_LOG));
 
     if($node_pid > 0){
       $this->writeFile('access.log', 'APP START IN PID: '.$node_pid.'.');
@@ -153,7 +148,7 @@ class Node{
       return $this->report(self::$NORUNNING);
     }
 
-    if (execute($this->PATH_BIN.'/pid.py', $node_pid, true) === 'False'){
+    if (execute('python '.$this->PATH_BIN.'/pid.py '.$node_pid) === 'False'){
       if ($this->NODE_WATCH === 1){
         $this->writeFile('error.log', 'DOWN APP SERVER IN PID: '.$node_pid.'.');
         if ($this->NODE_REPORT){
@@ -171,7 +166,7 @@ class Node{
       return $this->report(self::$ERROR);
     }
 
-    if (execute($this->PATH_BIN.'/kill.py', $node_pid, true) === 'True'){
+    if (execute('python '.$this->PATH_BIN.'/kill.py '.$node_pid) === 'True'){
       $this->writeFile('access.log', 'APP STOP IN PID: '.$node_pid.'.');
       @file_put_contents($this->NODE_DIR_PID.'/'.$this->DAEMON, '', LOCK_EX);
       if ($this->NODE_REPORT){
@@ -187,7 +182,7 @@ class Node{
   public function getStatus(){
     $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
     
-    if ( (execute($this->PATH_BIN.'/pid.py', $node_pid, true) === 'True') and $node_pid !== 0){
+    if ( (execute('python '.$this->PATH_BIN.'/pid.py '.$node_pid) === 'True') and $node_pid !== 0){
       return $this->report(self::$RUNNING, $node_pid);
     }else{
       @file_put_contents($this->NODE_DIR_PID.'/'.$this->DAEMON, '', LOCK_EX);

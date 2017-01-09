@@ -7,8 +7,7 @@
 
   // EJEMPLO USANDO SHELL_EXEC -> https://github.com/formatcom/shell_exec
   $ROUTER = Array(
-    'shell'  => Array('^shell(.*?)$', 'http://127.0.0.1:30000$1'),
-    'socket' => Array('^socket.io(.*?)$', 'http://127.0.0.1:30000/socket.io$1'),
+    'app' => Array('^app(.*?)$', 'http://127.0.0.1:8000$1'),
   );
 
   $REDIRECT301 = Array(
