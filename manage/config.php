@@ -1,5 +1,5 @@
 <?php
-  require_once('core/index.php');
+  require_once('nodeShared/index.php');
 
   ENV::set('NODE_HOME',   '/home/formatcom');
 

@@ -1,5 +1,5 @@
 <?php
-  require_once('core/access.php');
+  require_once('nodeShared/access.php');
 
   $HTACCESS = Array(
     'example' => '# ESTO ES UN COMENTARIO EN HTACCESS',

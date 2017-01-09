@@ -39,7 +39,7 @@
     if ($admin_active){
 
       // lee la version local de nodeShared
-      $version     = @file_get_contents('core/update');
+      $version     = @file_get_contents('nodeShared/update');
       // lee la ultima version de nodeShared
       // en el servidor
       $new_version = @file_get_contents('https://formatcom.github.io/nodeShared/update');
@@ -51,7 +51,7 @@
 	// crea el daemon update
 	// es el encargado de actualizar
 	// nodeShared
-        $DAEMON['update'] = new Node('update', $admin_pass, '.', Array(), 'dos2unix core/update.sh && sh core/update.sh core', 1, false, true);
+        $DAEMON['update'] = new Node('update', $admin_pass, '.', Array(), 'dos2unix nodeShared/update.sh && sh nodeShared/update.sh core', 1, false, true);
       }else if ($name === 'update'){
         die('You have the most recent version.');
       }
