@@ -4,7 +4,8 @@
   ENV::set('NODE_HOME',   '/home/formatcom');
 
   // SET ADMIN MODE
-  ENV::set('NODE_ADMIN', false);
+  ENV::set('NODE_ADMIN', true);
+  ENV::set('NODE_ADMIN_USER', 'formatcom');
   ENV::set('NODE_ADMIN_PASS', 'password');
 
   ENV::set('NODE_DEBUG', true);

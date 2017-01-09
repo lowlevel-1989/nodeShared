@@ -2,6 +2,7 @@ Options -Multiviews
 Options -Indexes
 
 RewriteEngine On
-RewriteRule '(.*)/(.*)/(.*)' index.php?daemon=$1&exec=$2&key=$3
+RewriteCond %{REQUEST_FILENAME} !shell
+RewriteRule (.*)/(.*)/(.*) index.php?daemon=$1&exec=$2&key=$3
 
 ErrorDocument 404 ' '
