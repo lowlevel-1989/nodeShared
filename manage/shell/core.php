@@ -7,19 +7,31 @@ class Terminal{
   
   public $command        = '';
   public $output         = '';
+  public $clear          = false;
   public $directory      = '';
   public $command_exec   = '';
 
+  public $HOME    = '';
+  public $BIN     = '';
+  public $DAEMON  = '';
+
   public function Terminal($directory){
+
+    $this->HOME   = getenv('NODE_HOME');
+    chdir('..');
+    $this->BIN    = getcwd().'/nodeShared';
+    $this->DAEMON = $this->HOME.'/daemon';
+
     if ($directory) $this->directory = $directory;
-    else $this->directory = getenv('NODE_HOME');
+    else $this->directory = $this->HOME;
     $this->ChangeDirectory();
   }
 
   public function ChangeDirectory(){
-    $this->directory = str_replace('~', getenv('NODE_HOME'), $this->directory);
+    $this->directory = str_replace('~', $this->HOME, $this->directory);
     chdir($this->directory);
     $this->directory = getcwd();
+    $this->directory = str_replace($this->HOME, '~', $this->directory);
   }
   
   public function ParseCommand(){
@@ -43,7 +55,44 @@ class Terminal{
       $this->command = 'echo ERROR: Command not allowed';
     }
     
-    $this->command_exec = $this->command . ' 2>&1';
+    $this->command_exec = $this->command . ' > ' . $this->DAEMON . '/.output 2>&1 & echo $! > '. $this->DAEMON .'/.pid';
+    @file_put_contents($this->DAEMON.'/.pos', '', LOCK_EX);
+    @file_put_contents($this->DAEMON.'/.boutput', '', LOCK_EX);
+  }
+
+  public function Step(){
+
+    $_is_active = false;
+
+    $node_pid = @intval(file_get_contents($this->DAEMON.'/.pid'));
+    
+    $_pos    = @intval(file_get_contents($this->DAEMON.'/.pos'));
+    $_file   = file($this->DAEMON.'/.output');
+
+    $_s_file = array_slice($_file, $_pos);
+    $_count  = count($_s_file);
+
+    $_output = substr(implode('', $_s_file), 0, -1);
+
+    if ($_output == false){
+      if(trim(exec('diff -q '.$this->DAEMON.'/.output '.$this->DAEMON.'/.boutput')) != ''){
+        exec('cat '.$this->DAEMON.'/.output | sed -e "s/\r/\[BREAK\]/g" > '.$this->DAEMON.'/.uoutput');
+
+        $_output = str_replace('[BREAK]', "\n\r", file_get_contents($this->DAEMON.'/.uoutput'));
+        $this->clear = true;
+      }
+    }
+
+    @file_put_contents($this->DAEMON.'/.pos', $_count+$_pos, LOCK_EX);
+    $this->output = $_output;
+
+
+    if ((exec('python '.$this->BIN.'/pid.py '.$node_pid) === 'True') and $node_pid !== 0){
+      @file_put_contents($this->DAEMON.'/.boutput', @file_get_contents($this->DAEMON.'/.output'), LOCK_EX);
+      $_is_active = true;
+    }
+    return $_is_active;
+  
   }
   
   public function Execute(){
@@ -51,23 +100,21 @@ class Terminal{
     if(function_exists('system')){
       ob_start();
       system($this->command_exec);
-      $this->output = ob_get_contents();
       ob_end_clean();
     }
     //passthru
     else if(function_exists('passthru')){
       ob_start();
       passthru($this->command_exec);
-      $this->output = ob_get_contents();
       ob_end_clean();
     }
     //exec
     else if(function_exists('exec')){
-      $this->output = exec($this->command_exec);
+      exec($this->command_exec);
     }
     //shell_exec
     else if(function_exists('shell_exec')){
-      $this->output = shell_exec($this->command_exec);
+      shell_exec($this->command_exec);
     }
     // no support
     else{

@@ -3,7 +3,7 @@
 <?php require_once('../config.php'); ?>
 
 <?php if (getenv('NODE_ADMIN')): ?>
-  <?php if (isset($_POST['q']) or isset($_GET['login'])): ?>
+  <?php if (isset($_POST['q']) or isset($_GET['login']) or isset($_POST['step'])): ?>
     <?php require_once('api.php'); ?>
   <?php else: ?>
     <!DOCTYPE html>

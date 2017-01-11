@@ -33,16 +33,29 @@
 
       $Terminal = new Terminal($_POST['pwd']);
       $command  = explode("&&", $_POST['q']);
-      $output = '';
 
       foreach($command as $c){
         $Terminal->command = $c;
-        $output .= $Terminal->Process();
+        $Terminal->Process();
       }
 
       die(json_encode(
-        array('output' => $output, 'pwd' => $Terminal->directory)
+        array('output' => '', 'active' => true, 'clear' => $Terminal->clear, 'pwd' => $Terminal->directory)
       ));
     }
   }
+
+  if ($_POST['step']){
+    $is_auth = _is_auth(apache_request_headers()['Authorization']);
+    if ($is_auth){
+      $Terminal  = new Terminal($_POST['pwd']);
+      $is_active = $Terminal->Step();
+
+      die(json_encode(
+        array('output' => $Terminal->output, 'clear' => $Terminal->clear, 'active' => $is_active, 'pwd' => $Terminal->directory)
+      ));
+    
+    }
+  }
+
 ?>
