@@ -63,6 +63,10 @@ class Node{
     }
   }
 
+  public function supervisor() {
+    return $this->start($this->NODE_KEY);
+  }
+
   public function start($KEY) {
 
     if(!file_exists($this->NODE_DIR)){

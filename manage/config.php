@@ -20,7 +20,7 @@
   // SET ENV PATH
   ENV::setPath(Array(
     // https://nodejs.org/dist/v6.9.4/node-v6.9.4-linux-x64.tar.xz
-    'node' => '/home/formatcom/bin/node-v6.11.4-linux-x64/bin'
+    'node' => '/home/formatcom/node-v6.9.4-linux-x64/bin'
   ));
 
   /*
@@ -43,7 +43,7 @@
 
   // SET NEW DAEMONS
   $DAEMON = Array(
-    'app' => new Node('app', 'password', '/home/formatcom/app', 'PORT=8000 node server/app.js', 0, true, false)
+    'app' => new Node('app', 'password', '/home/formatcom/app', 'PORT=8000 node index.js', 0, true, false)
   );
 
  ?>
