@@ -3,7 +3,7 @@
   function execute($SCRIPT, $DAEMON = false, $PATH_PID = false, $PATH_LOG = false){
 
     if ($DAEMON === false){
-      return @exec($SCRIPT); 
+      return @exec($SCRIPT);
     }else{
       $STDOUT = $PATH_LOG.'/STDOUT.log';
       $STDERR = $PATH_LOG.'/STDERR.log';
