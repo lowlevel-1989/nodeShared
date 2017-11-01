@@ -1,5 +1,5 @@
 Mini Instruccines
-  
+
   1.- configurar el archivo config.php y public.php que se
   encuentran dentro de la carpeta manage.
 
@@ -17,13 +17,13 @@ NOTAS:
   activado por defecto.
 
   2.- para evitar que el daemon muera utilizando nodeShared debes
-  crear como pagina princial un ajax que ataque a tu daemon 
+  crear como pagina princial un ajax que ataque a tu daemon
   utilizando la instruccion de exec para que nodeShared siempre
   verifique si este se encuentra activo y de caso contrario
   activarlo.
 
   Esa pagina de inicio una vez que haga el ajax se recomienda
-  redireccionarlo a tu daemon [ al servidor de tu app ] por 
+  redireccionarlo a tu daemon [ al servidor de tu app ] por
   ejemplo www.tudominio.com/app  <- y asi el usurio nunca
   tendra que ver un servidor caido.
 
@@ -51,7 +51,7 @@ COMMAND LINE
   php manage/index.php daemon exec key
 
 LIST STATES
-  
+
   0 === ERROR     | NO ACTION
   1 === START     | RUN THE DAEMON
   2 === RUNNING   | NO ACTION
@@ -59,11 +59,10 @@ LIST STATES
   4 === STOP      | STOP THE DAEMON
 
 REQUIREMENTS VERSION PHP
-  
+
   1.- hosting shared on linux
   2.- functions enabled: exec
   3.- apache mod_rewrite enabled
-  4.- apache mod_proxy   enabled
 
 
 REQUIREMENTS VERSION PYTHON (working)
@@ -71,7 +70,6 @@ REQUIREMENTS VERSION PYTHON (working)
   1.- hosting shared on linux
   2.- apache cgi_module  enabled
   3.- apache mod_rewrite enabled
-  4.- apache mod_proxy   enabled
 
 
 
