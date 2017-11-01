@@ -44,7 +44,7 @@
       // en el servidor
       $new_version = @file_get_contents('https://formatcom.github.io/nodeShared/update');
 
-      // verifica si tenemos la 
+      // verifica si tenemos la
       // ultima version instalada
       if ($new_version > $version){
 
@@ -59,7 +59,7 @@
 
     // se verifica si el daemon no existe
     if(!isset($DAEMON[$name])){
-      
+
       // se reporta el error
       $data = Array('running' => false, 'state' => 0);
       die(json_encode($data));

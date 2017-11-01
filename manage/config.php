@@ -1,10 +1,10 @@
 <?php
   require_once('nodeShared/index.php');
 
-  ENV::set('NODE_HOME',   '/home/formatcom');
+  ENV::set('NODE_HOME', '/home/formatcom');
 
   // SET ADMIN MODE
-  ENV::set('NODE_ADMIN', true);
+  ENV::set('NODE_ADMIN', true); // CAMBIAS ESTO A FALSO
   ENV::set('NODE_ADMIN_USER', 'formatcom');
   ENV::set('NODE_ADMIN_PASS', 'password');
 
@@ -20,7 +20,7 @@
   // SET ENV PATH
   ENV::setPath(Array(
     // https://nodejs.org/dist/v6.9.4/node-v6.9.4-linux-x64.tar.xz
-    'node' => '/home/formatcom/node-v6.9.4-linux-x64/bin'
+    'node' => '/home/formatcom/bin/node-v6.11.4-linux-x64/bin'
   ));
 
   /*
@@ -43,15 +43,7 @@
 
   // SET NEW DAEMONS
   $DAEMON = Array(
-    'app' => new Node('app', '123456', '/home/formatcom/app', 'PORT=8000 node index.js', 0, true, false)
+    'app' => new Node('app', 'password', '/home/formatcom/app', 'PORT=8000 node server/app.js', 0, true, false)
   );
-
-
-
-
-
-
-
-
 
  ?>

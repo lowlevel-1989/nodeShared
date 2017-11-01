@@ -54,7 +54,6 @@
       die(json_encode(
         array('output' => $Terminal->output, 'clear' => $Terminal->clear, 'active' => $is_active, 'pwd' => $Terminal->directory)
       ));
-    
     }
   }
 

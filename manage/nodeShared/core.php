@@ -15,7 +15,7 @@ class Node{
   private $NODE_DIR_LOG, $NODE_DIR_PID, $PATH_BIN;
   private $NODE_REPORT,  $NODE_DEBUG,   $NODE_ROOT_DIR;
 
-  public function Node($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_SCRIPT, $NODE_TYPE, $NODE_WATCH, $NODE_REPORT) {
+  public function __construct($DAEMON, $NODE_KEY, $NODE_ROOT, $NODE_SCRIPT, $NODE_TYPE, $NODE_WATCH, $NODE_REPORT) {
     $this->DAEMON        = strtolower($DAEMON);
     $this->NODE_ROOT     = $NODE_ROOT;
     $this->NODE_SCRIPT   = $NODE_SCRIPT;
@@ -46,7 +46,7 @@ class Node{
       $data = array('running' => true,  'status' => $STATUS);
     }else{
       $data = array('running' => false, 'status' => $STATUS);
-    }  
+    }
     if ($this->NODE_DEBUG){
       $data['pid']     = $PID;
       $data['version'] = @trim(file_get_contents(dirname(__FILE__).'/version'));
@@ -54,9 +54,9 @@ class Node{
       $data['watch']   = $this->NODE_WATCH;
     }
     if (isset($argv[1]) and isset($argv[2])){
-      $shell_print = "running: ".$data['running']."\r"; 
-      $shell_print .= "status: ".$data['status']."\r"; 
-      $shell_print .= "pid: ".$PID."\r\r\r"; 
+      $shell_print = "running: ".$data['running']."\r";
+      $shell_print .= "status: ".$data['status']."\r";
+      $shell_print .= "pid: ".$PID."\r\r\r";
       return $shell_print;
     }else{
       return json_encode($data);
@@ -66,6 +66,10 @@ class Node{
   public function start($KEY) {
 
     if(!file_exists($this->NODE_DIR)){
+      mkdir($this->NODE_DIR_PID, 0755, true);
+    }
+
+    if(!file_exists($this->NODE_DIR_PID)){
       mkdir($this->NODE_DIR_PID, 0755, true);
     }
 
@@ -84,7 +88,7 @@ class Node{
         return $this->report(self::$ERROR);
       }
     }
-    
+
     if(!$this->NODE_ADMIN && $this->NODE_TYPE === 2){
       $this->writeFile('error.log', 'DAEMON NO ACTIVE. TYPE: '.$this->NODE_TYPE.'.');
       return $this->return(self::$ERROR);
@@ -181,7 +185,7 @@ class Node{
 
   public function getStatus(){
     $node_pid = @intval(file_get_contents($this->NODE_DIR_PID.'/'.$this->DAEMON));
-    
+
     if ( (execute('python '.$this->PATH_BIN.'/pid.py '.$node_pid) === 'True') and $node_pid !== 0){
       return $this->report(self::$RUNNING, $node_pid);
     }else{

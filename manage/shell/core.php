@@ -1,10 +1,10 @@
 <?php
 
-class Terminal{
-  
+class Terminal {
+
   public static $BLOCKED = array('ssh', 'telnet', 'less', 'more', 'tail');
   public static $EDITOR  = array('vim', 'vi', 'nano');
-  
+
   public $command        = '';
   public $output         = '';
   public $clear          = false;
@@ -15,12 +15,16 @@ class Terminal{
   public $BIN     = '';
   public $DAEMON  = '';
 
-  public function Terminal($directory){
+  function __construct($directory){
 
     $this->HOME   = getenv('NODE_HOME');
     chdir('..');
     $this->BIN    = getcwd().'/nodeShared';
     $this->DAEMON = $this->HOME.'/daemon';
+
+    if(!file_exists($this->DAEMON)){
+      mkdir($this->DAEMON, 0755, true);
+    }
 
     if ($directory) $this->directory = $directory;
     else $this->directory = $this->HOME;
@@ -33,28 +37,28 @@ class Terminal{
     $this->directory = getcwd();
     $this->directory = str_replace($this->HOME, '~', $this->directory);
   }
-  
+
   public function ParseCommand(){
-  
+
     $command_parts = explode(' ', $this->command);
-    
+
     if(in_array('cd', $command_parts)){
       $cd_key = array_search('cd', $command_parts);
       $cd_key++;
       $this->directory = $command_parts[$cd_key];
-      
+
       $_directory = $command_parts[$cd_key];
-      
+
       $this->ChangeDirectory();
       $this->command = str_replace('cd '.$_directory, '', $this->command);
     }
-    
+
     $this->command = str_replace(self::$EDITOR, 'cat', $this->command);
-    
+
     if(in_array($command_parts[0], self::$BLOCKED)){
       $this->command = 'echo ERROR: Command not allowed';
     }
-    
+
     $this->command_exec = $this->command . ' > ' . $this->DAEMON . '/.output 2>&1 & echo $! > '. $this->DAEMON .'/.pid';
     @file_put_contents($this->DAEMON.'/.pos', '', LOCK_EX);
     @file_put_contents($this->DAEMON.'/.boutput', '', LOCK_EX);
@@ -65,7 +69,7 @@ class Terminal{
     $_is_active = false;
 
     $node_pid = @intval(file_get_contents($this->DAEMON.'/.pid'));
-    
+
     $_pos    = @intval(file_get_contents($this->DAEMON.'/.pos'));
     $_file   = file($this->DAEMON.'/.output');
 
@@ -92,9 +96,9 @@ class Terminal{
       $_is_active = true;
     }
     return $_is_active;
-  
+
   }
-  
+
   public function Execute(){
     //system
     if(function_exists('system')){

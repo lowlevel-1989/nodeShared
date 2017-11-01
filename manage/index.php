@@ -9,7 +9,7 @@
   //la terminal
   if (isset($argv[1]) and isset($argv[2])){
 
-    //nos movemos a la carpeta del proyecto	  
+    //nos movemos a la carpeta del proyecto
     chdir(dirname(__FILE__));
   }
   require_once('nodeShared/api.php');

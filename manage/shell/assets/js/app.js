@@ -32,7 +32,7 @@
         term.logout()
       }
     })
-  
+
   }
 
   var $term = jQuery('body').terminal(function(command, term){
