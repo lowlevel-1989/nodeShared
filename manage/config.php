@@ -11,6 +11,8 @@
   ENV::set('NODE_DEBUG', true);
 
   ENV::set('NODE_SHELL_SUPPORT', true);
+  ENV::set('NODE_API_REST_SUPPORT', true);
+  ENV::set('NODE_API_METHOD_GET_SUPPORT', false);
 
   ENV::set('NODE_MAIL', 'formatcomvinicio@gmail.com');
   ENV::set('NODE_ACCESS', 'https://formatcom.alwaysdata.net');

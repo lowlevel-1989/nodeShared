@@ -53,10 +53,20 @@ class Node{
       $data['type']    = $this->NODE_TYPE;
       $data['watch']   = $this->NODE_WATCH;
     }
-    if (isset($argv[1]) and isset($argv[2])){
-      $shell_print = "running: ".$data['running']."\r";
-      $shell_print .= "status: ".$data['status']."\r";
-      $shell_print .= "pid: ".$PID."\r\r\r";
+    if (php_sapi_name() === 'cli'){
+
+      $data['pid']     = $PID;
+      $data['version'] = @trim(file_get_contents(dirname(__FILE__).'/version'));
+      $data['type']    = $this->NODE_TYPE;
+      $data['watch']   = $this->NODE_WATCH;
+
+      $data['running'] = ($data['running']) ? 'true' : 'false';
+
+      $shell_print = "running: ".$data['running']."\r\n";
+      $shell_print .= "status: ".$data['status']."\r\n";
+      $shell_print .= "type: ".$data['type']."\r\n";
+      $shell_print .= "watch: ".$data['watch']."\r\n";
+      $shell_print .= ($PID) == '' ? '' : "pid: ".$PID."\r\n";
       return $shell_print;
     }else{
       return json_encode($data);

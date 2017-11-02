@@ -5,12 +5,9 @@
   header("Access-Control-Allow-Origin: ".getenv('NODE_ACCESS'));
   header('Content-Type: application/json; charset=utf8');
 
-  // flag se activa si los
-  // args son validos
+  // flag se activa si los args son validos
   $_active = false;
 
-  // verifica si el request
-  // es GET o POST
   if (isset($_REQUEST['exec']) and isset($_REQUEST['daemon'])){
     $exec = strtolower($_REQUEST['exec']);
     $name = $_REQUEST['daemon'];
@@ -18,8 +15,23 @@
     $_active = true;
   }
 
-  // verifica si el request
-  // viene desde la shell
+  // Se verifica si tiene soporte para api rest
+  if (getenv('NODE_API_REST_SUPPORT')) {
+    if (isset($_POST['exec']) and isset($_POST['daemon'])){
+      $exec = strtolower($_POST['exec']);
+      $name = $_POST['daemon'];
+      $key  = $_POST['key'];
+      $_active = true;
+    }
+    if (isset($_GET['exec']) and isset($_GET['daemon']) and getenv('NODE_API_METHOD_GET_SUPPORT')){
+      $exec = strtolower($_GET['exec']);
+      $name = $_GET['daemon'];
+      $key  = $_GET['key'];
+      $_active = true;
+    }
+  }
+
+  // verifica si el request viene desde la shell
   if (isset($argv[1]) and isset($argv[2]) and getenv('NODE_SHELL_SUPPORT')){
     $exec = strtolower($argv[2]);
     $name = $argv[1];
@@ -59,10 +71,7 @@
 
     // se verifica si el daemon no existe
     if(!isset($DAEMON[$name])){
-
-      // se reporta el error
-      $data = Array('running' => false, 'state' => 0);
-      die(json_encode($data));
+      die();
     }
 
     // se ejecuta la accion selecciona
