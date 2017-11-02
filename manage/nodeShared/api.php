@@ -61,6 +61,9 @@
     // el modo admin
     if ($admin_active){
 
+      $DAEMON['supervisor'] = new Node('supervisor', $admin_pass, '.', 'ping -c 10 google.com', 0, true, false);
+
+
       // lee la version local de nodeShared
       $version     = @file_get_contents('nodeShared/update');
       // lee la ultima version de nodeShared
@@ -74,7 +77,7 @@
 	// crea el daemon update
 	// es el encargado de actualizar
 	// nodeShared
-        $DAEMON['update'] = new Node('update', $admin_pass, '.', 'dos2unix nodeShared/update.sh && sh nodeShared/update.sh core', 1, false, true);
+        $DAEMON['update'] = new Node('update', $admin_pass, '.', 'dos2unix nodeShared/update.sh && sh nodeShared/update.sh core', 1, false, false);
       }else if ($name === 'update'){
         die('You have the most recent version.');
       }

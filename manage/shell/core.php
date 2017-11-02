@@ -3,8 +3,8 @@
 class Terminal {
 
   public static $BLOCKED = array('ssh', 'telnet', 'less', 'more', 'tail');
-  public static $EDITOR  = array('vim', 'vi', 'nano');
-  public static $MANAGE  = 'manage';
+  public static $EDITOR  = array('/\bvim\b/', '/\bvi\b/', '/\bnano\b/');
+  public static $MANAGE  = '/\bmanage\b/';
 
   public $command        = '';
   public $output         = '';
@@ -56,8 +56,8 @@ class Terminal {
       $this->command = str_replace('cd '.$_directory, '', $this->command);
     }
 
-    $this->command = str_replace(self::$EDITOR, 'cat', $this->command);
-    $this->command = str_replace(self::$MANAGE, $this->MANAGE_BIN, $this->command);
+    $this->command = preg_replace(self::$EDITOR, 'cat', $this->command);
+    $this->command = preg_replace(self::$MANAGE, $this->MANAGE_BIN, $this->command);
 
     if(in_array($command_parts[0], self::$BLOCKED)){
       $this->command = 'echo ERROR: Command not allowed';
