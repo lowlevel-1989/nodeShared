@@ -8,13 +8,6 @@
   // flag se activa si los args son validos
   $_active = false;
 
-  if (isset($_REQUEST['exec']) and isset($_REQUEST['daemon'])){
-    $exec = strtolower($_REQUEST['exec']);
-    $name = $_REQUEST['daemon'];
-    $key  = $_REQUEST['key'];
-    $_active = true;
-  }
-
   // Se verifica si tiene soporte para api rest
   if (getenv('NODE_API_REST_SUPPORT')) {
     if (isset($_POST['exec']) and isset($_POST['daemon'])){
