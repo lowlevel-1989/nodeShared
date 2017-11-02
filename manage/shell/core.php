@@ -4,6 +4,7 @@ class Terminal {
 
   public static $BLOCKED = array('ssh', 'telnet', 'less', 'more', 'tail');
   public static $EDITOR  = array('vim', 'vi', 'nano');
+  public static $MANAGE  = 'manage';
 
   public $command        = '';
   public $output         = '';
@@ -14,12 +15,14 @@ class Terminal {
   public $HOME    = '';
   public $BIN     = '';
   public $DAEMON  = '';
+  public $MANAGE_BIN = 'php ';
 
   function __construct($directory){
 
     $this->HOME   = getenv('NODE_HOME');
     chdir('..');
     $this->BIN    = getcwd().'/nodeShared';
+    $this->MANAGE_BIN .= getcwd().'/index.php';
     $this->DAEMON = $this->HOME.'/daemon';
 
     if(!file_exists($this->DAEMON)){
@@ -54,6 +57,7 @@ class Terminal {
     }
 
     $this->command = str_replace(self::$EDITOR, 'cat', $this->command);
+    $this->command = str_replace(self::$MANAGE, $this->MANAGE_BIN, $this->command);
 
     if(in_array($command_parts[0], self::$BLOCKED)){
       $this->command = 'echo ERROR: Command not allowed';

@@ -9,6 +9,8 @@
     echo "enabled mod_rewrite: "; echo array_key_exists('HTTP_MOD_REWRITE', $_SERVER);
     echo "<br>";
     echo "enabled exec: "; echo function_exists('exec');
+    echo "<br>";
+    echo "enabled file_get_contents: "; echo function_exists('file_get_contents');
   }else{
     header("HTTP/1.0 404 Not Found");
   }

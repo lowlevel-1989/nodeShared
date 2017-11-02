@@ -26,6 +26,24 @@
 
   // verifica si el request viene desde la shell
   if (isset($argv[1]) and isset($argv[2]) and getenv('NODE_SHELL_SUPPORT')){
+
+    if ($argv[1] == '-i'){
+      if ($argv[2] == 'version') {
+        $_version = @trim(file_get_contents(dirname(__FILE__).'/version'));
+        $_version = 'nodeShared version: '.$_version."\r\n";
+        die($_version);
+      }
+
+      if ($argv[2] == 'list') {
+	echo "daemon list\r\n";
+        foreach ($DAEMON as $name => $node){
+      	  echo "- ".$name."\r\n";
+        }
+        die();
+      }
+    }
+
+
     $exec = strtolower($argv[2]);
     $name = $argv[1];
     $key  = $argv[3];
