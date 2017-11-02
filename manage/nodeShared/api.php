@@ -25,7 +25,7 @@
   }
 
   // verifica si el request viene desde la shell
-  if (isset($argv[1]) and isset($argv[2]) and getenv('NODE_SHELL_SUPPORT')){
+  if (php_sapi_name() === 'cli' && isset($argv[1]) and isset($argv[2]) and getenv('NODE_SHELL_SUPPORT')){
 
     if ($argv[1] == '-i'){
       if ($argv[2] == 'version') {
@@ -46,7 +46,7 @@
 
     $exec = strtolower($argv[2]);
     $name = $argv[1];
-    $key  = $argv[3];
+    $key  = getenv('NODE_ADMIN_PASS');
     $_active = true;
   }
 
