@@ -1,10 +1,5 @@
-VERSION ESTABLE 1.0.0-1.pre
-
-
-Se estan trabajando la documentacion completa,
-ya la version 1.0.0-1.pre es estable, mas se
-agrego el -pre para indicar que se esta actu
-alizando la documentacion.
+VERSION ESTABLE 1.0.0
+Se estan trabajando la documentacion completa.
 
 
 Mini Instruccines
