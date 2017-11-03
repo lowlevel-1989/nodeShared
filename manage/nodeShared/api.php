@@ -41,6 +41,37 @@
         }
         die();
       }
+
+      if ($argv[2] == 'help') {
+        $_version = @trim(file_get_contents(dirname(__FILE__).'/version'));
+        $_version = 'version: '.$_version."\r\n\r\n";
+        $help = "nodeShared creado por Vinicio Valbuena\r\n";
+        $help .= "formatcomvinicio at gmail dot com\r\n";
+        $help .= $version;
+        $help .= "\r\n- ver ayuda\r\n";
+        $help .= "manage -i help\r\n\r\n";
+        $help .= "- ver version\r\n";
+        $help .= "manage -i version\r\n\r\n";
+        $help .= "- listar apps\r\n";
+        $help .= "manage -i list\r\n\r\n";
+        $help .= "- ver estado\r\n";
+        $help .= "manage {app} status\r\n\r\n";
+        $help .= "- ejecutar una app\r\n";
+        $help .= "manage {app} start\r\n\r\n";
+        $help .= "- detener una app\r\n";
+        $help .= "manage {app} stop\r\n\r\n\r\n";
+        $help .= "DAEMON ESPECIALES\r\n\r\n";
+        $help .= "- actualizar nodeShared\r\n";
+        $help .= "manage update start\r\n\r\n";
+        $help .= "- activar beat\r\n";
+        $help .= "manage beat start\r\n\r\n";
+        $help .= "- ver estado del beat\r\n";
+        $help .= "manage beat status\r\n\r\n";
+        $help .= "- detener el beat\r\n";
+        $help .= "manage beat stop\r\n";
+	die($help);
+      }
+
     }
 
 
@@ -49,6 +80,7 @@
     $key  = getenv('NODE_ADMIN_PASS');
     $_active = true;
   }
+  $DAEMON['beat'] = new Node('beat', getenv('NODE_ADMIN_PASS'), '.', 'python nodeShared/beat.py', 0, true, false);
 
   // verifica si todos los
   // args fueron validos
@@ -60,9 +92,6 @@
     // verifica si esta activo
     // el modo admin
     if ($admin_active){
-
-      $DAEMON['supervisor'] = new Node('supervisor', $admin_pass, '.', 'ping -c 10 google.com', 0, true, false);
-
 
       // lee la version local de nodeShared
       $version     = @file_get_contents('nodeShared/update');

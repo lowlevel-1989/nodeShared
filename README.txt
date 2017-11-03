@@ -1,33 +1,35 @@
+VERSION ESTABLE 1.0.0-1.pre
+
+
+Se estan trabajando la documentacion completa,
+ya la version 1.0.0-1.pre es estable, mas se
+agrego el -pre para indicar que se esta actu
+alizando la documentacion.
+
+
 Mini Instruccines
 
-  1.- configurar el archivo config.php y public.php que se
+  1.- configurar el archivo config.php, public.php y supervisor.php que se
   encuentran dentro de la carpeta manage.
 
-  2.- subir la carpeta manage a tu hosting compartido
+  2.- verificar soporte con nodeShared desde la ruta https://dominio.com/manage/info
+
+  3.- subir la carpeta manage a tu hosting compartido
   en la carpeta publica de tu servidor comunmente
   tienen como nombre www/html_public.
 
-  3.- si en las configuraciones tienes activo el modo admin
+  4.- si en las configuraciones tienes activo el modo admin
   este te permite acceder a una terminal desde el navegador
   desde la url www.tudominio.com/manage/shell
+
 
 NOTAS:
 
   1.- no se recomienda dejar el modo admin activo, el mismo viene
-  activado por defecto.
+  activado por defecto para poder acceder a la shell y lanzar tus
+  apps como daemon.
 
-  2.- para evitar que el daemon muera utilizando nodeShared debes
-  crear como pagina princial un ajax que ataque a tu daemon
-  utilizando la instruccion de exec para que nodeShared siempre
-  verifique si este se encuentra activo y de caso contrario
-  activarlo.
-
-  Esa pagina de inicio una vez que haga el ajax se recomienda
-  redireccionarlo a tu daemon [ al servidor de tu app ] por
-  ejemplo www.tudominio.com/app  <- y asi el usurio nunca
-  tendra que ver un servidor caido.
-
-  3.- estas mini instrucciones no son muy claras y se estan
+  2.- estas mini instrucciones no son muy claras y se estan
   trabajando en ellas, junto a un video tutorial. de momento
   es lo maximo que puedo dejarles. espero que sea de utilidad
   y cualquier error reportarlo seria de mucha utilidad.
@@ -35,7 +37,62 @@ NOTAS:
   vinicio.valbuena89 at gmail dot com
 
 
-MANAGE METHODS GET/POST
+
+ADMINISTRAR TUS APPS DESDE LA LINEA DE COMANDO
+
+  - debe estar activo el modo admin
+  - se accede desde la ruta https://dominio.com/manage/shell
+
+  - ver ayuda
+  manage -i help
+
+  - ver version de nodeShared
+  manage -i version
+
+  - listar apps configuradas en config.php
+  manage -i list
+
+  - ver estado de alguna app
+  manage {app} status
+
+  - ejecutar una app como daemon
+  manage {app} start
+
+  - detener una app corriendo como daemon
+  manage {app} stop
+
+  donde {app} se reemplaza por el nombre que se asigno
+  en config.php por ejemplo manage app_django status
+
+
+DAEMON ESPECIALES QUE VIENEN CON NODESHARED
+
+  - actualizar nodeShared
+  manage update start
+
+  - activar beat, que se encarga de ejecutar el supervisor
+  cada 5 min, para asegurar que tus apps siempre esten dis
+  ponibles
+
+  manage beat start
+
+  - ver estado del beat
+  manage beat status
+
+  - detener el beat
+  manage beat stop
+
+  el supervisor se configura en el archivo supervisor.php
+  y desde ajax o curl se accede hacia el por la ruta
+  https://dominio.com/manage/supervisor
+
+  recordar que el beat se ejecuta cada 5 min lo que este
+  configurado en el archivo supervisor.php, lo que servira
+  para que tu app no muera aunque ningun cliente este ejecu
+  tando un ajax al supervisor.
+
+
+MANAGE METHODS GET/POST <- DESACTIVADO POR DEFECTO
 
   https://example.com/manage/deamon/exec/key
   https://example.com/manage/?daemon=app&exec=start&key=password
@@ -46,9 +103,6 @@ MANAGE METHODS GET/POST
   key    === API KEY
   exec   === [ start | status | stop ]
 
-COMMAND LINE
-
-  php manage/index.php daemon exec key
 
 LIST STATES
 

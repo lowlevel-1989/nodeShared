@@ -4,7 +4,7 @@ class Terminal {
 
   public static $BLOCKED = array('ssh', 'telnet', 'less', 'more', 'tail');
   public static $EDITOR  = array('/\bvim\b/', '/\bvi\b/', '/\bnano\b/');
-  public static $MANAGE  = '/\bmanage\b/';
+  public static $MANAGE  = '/^\bmanage\b/';
 
   public $command        = '';
   public $output         = '';
@@ -22,7 +22,7 @@ class Terminal {
     $this->HOME   = getenv('NODE_HOME');
     chdir('..');
     $this->BIN    = getcwd().'/nodeShared';
-    $this->MANAGE_BIN .= getcwd().'/index.php';
+    $this->MANAGE_BIN .= getcwd().'/index.php ';
     $this->DAEMON = $this->HOME.'/daemon';
 
     if(!file_exists($this->DAEMON)){
