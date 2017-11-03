@@ -1,7 +1,0 @@
-Options -Multiviews
-Options -Indexes
-
-RewriteEngine On
-RewriteRule ^google/(.*?)$ https://google.com?q=$1 [L,R=301,NC]
-RewriteRule ^app(.*?)$ http://127.0.0.1:8000$1 [P]
-RewriteRule ^socket.io(.*?)$ http://127.0.0.1:8000/socket.io$1 [P]
