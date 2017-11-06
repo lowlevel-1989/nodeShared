@@ -1,21 +1,22 @@
 <?php
   require_once('nodeShared/index.php');
 
-  ENV::set('NODE_HOME', '/home/formatcom');
+  ENV::set('NODE_HOME', '/home/formatcom'); # Asignar la ruta del home del usuario
 
   // SET ADMIN MODE
-  ENV::set('NODE_ADMIN', true);
-  ENV::set('NODE_ADMIN_USER', 'formatcom');
-  ENV::set('NODE_ADMIN_PASS', 'password');
+  ENV::set('NODE_ADMIN', true); # Modo admin
+  ENV::set('NODE_ADMIN_USER', 'formatcom'); # usuario admin
+  ENV::set('NODE_ADMIN_PASS', 'password'); # password
 
-  ENV::set('NODE_DEBUG', true);
+  ENV::set('NODE_DEBUG', true); # muestra mas informacion sobre las app corriendo
 
-  ENV::set('NODE_SHELL_SUPPORT', true);
-  ENV::set('NODE_API_REST_SUPPORT', false);
-  ENV::set('NODE_API_METHOD_GET_SUPPORT', false);
+  ENV::set('NODE_SHELL_SUPPORT', true); # soporta acceso a la shell
+  ENV::set('NODE_HIDDEN_SUPERVISOR', true); # muestra error 404 al acceder al supervisor
+  ENV::set('NODE_API_REST_SUPPORT', false); # manage con soporte desde api rest
+  ENV::set('NODE_API_METHOD_GET_SUPPORT', false); # activar soporte por metodo get
 
-  ENV::set('NODE_MAIL', 'formatcomvinicio@gmail.com');
-  ENV::set('NODE_ACCESS', 'https://formatcom.alwaysdata.net');
+  ENV::set('NODE_MAIL', 'formatcomvinicio@gmail.com'); # correo del administrador
+  ENV::set('NODE_ACCESS', 'https://formatcom.alwaysdata.net'); # sitio web desde donde se accede al manage
 
 
 

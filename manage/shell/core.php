@@ -3,7 +3,7 @@
 class Terminal {
 
   public static $BLOCKED = array('ssh', 'telnet', 'less', 'more', 'tail');
-  public static $EDITOR  = array('/\bvim\b/', '/\bvi\b/', '/\bnano\b/');
+  public static $EDITOR  = array('/^\bvim\b/', '/^\bvi\b/', '/^\bnano\b/');
   public static $MANAGE  = '/^\bmanage\b/';
 
   public $command        = '';

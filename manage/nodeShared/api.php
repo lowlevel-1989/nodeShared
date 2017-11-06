@@ -5,6 +5,30 @@
   header("Access-Control-Allow-Origin: ".getenv('NODE_ACCESS'));
   header('Content-Type: application/json; charset=utf8');
 
+  $_is_supervisor = false;
+  if (function_exists('debug_backtrace')){
+    $_trace = debug_backtrace();
+    if ((count($_trace) > 1 && basename($_trace[1]['file']) === 'supervisor.php') === true) {
+      $_is_supervisor = true;
+      if (getenv('NODE_HIDDEN_SUPERVISOR')){
+        header("HTTP/1.0 404 Not Found");
+      }
+    }
+  }else{
+    $_is_supervisor = true;
+  }
+
+  if ($_is_supervisor === false){
+    if (!getenv('NODE_API_REST_SUPPORT') ||
+    ( getenv('NODE_API_REST_SUPPORT') && !getenv('NODE_API_METHOD_GET_SUPPORT') )){
+      if (php_sapi_name() != 'cli') {
+        header("HTTP/1.0 404 Not Found");
+	die();
+      }
+    }
+  }
+
+
   // flag se activa si los args son validos
   $_active = false;
 

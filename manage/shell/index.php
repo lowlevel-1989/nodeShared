@@ -11,7 +11,7 @@
       <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="assets/css/jquery.terminal.min.css" />
-        <title>NodeShell V1.0.0</title>
+        <title>NodeShell V1.0.1</title>
       </head>
       <body>
         <script src="assets/js/jquery-3.1.1.min.js"></script>
