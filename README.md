@@ -1,6 +1,8 @@
 VERSION ESTABLE 1.0.0
 Se estan trabajando la documentacion completa.
 
+ver documentacion con formato desde aqui:
+<https://raw.githubusercontent.com/formatcom/nodeShared/master/README.md>
 
 Mini Instruccines
 
