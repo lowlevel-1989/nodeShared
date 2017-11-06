@@ -1,5 +1,10 @@
 # NodeShared v1.0.1
 
+## New Features!
+
+  - Modulo de seguridad
+  - binario manage desde la shell
+
 ### Installation
 
   1.- configurar el archivo config.php, public.php y supervisor.php que se
@@ -15,10 +20,6 @@
   este te permite acceder a una terminal desde el navegador
   desde la url www.tudominio.com/manage/shell
 
-# New Features!
-
-  - Modulo de seguridad
-  - binario manage desde la shell
 
 
 ### ADMINISTRAR TUS APPS DESDE LA LINEA DE COMANDO
@@ -86,9 +87,12 @@ https://example.com/manage/deamon/exec/key
   key    === API KEY
   exec   === [ start | status | stop ]
 
+```
 
-LIST STATES
 
+### LIST STATES
+
+```
   0 === ERROR     | NO ACTION
   1 === START     | RUN THE DAEMON
   2 === RUNNING   | NO ACTION
